@@ -76,12 +76,6 @@ crashlytics-build.properties
 .utmp/
 E-Circuit_BurstDebugInformation_DoNotShip/
 
-# Assets
-ContentPackages/
-/[Aa]ssets/UnityXRContent/
-/[Aa]ssets/Samples/
-
-
 ## IDEs
 .vscode
 .idea
