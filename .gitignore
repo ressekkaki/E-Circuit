@@ -60,6 +60,8 @@ sysinfo.txt
 *.aab
 *.unitypackage
 *.app
+*.so
+*.so.0
 
 # Crashlytics generated file
 crashlytics-build.properties
@@ -70,3 +72,17 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+.utmp/
+E-Circuit_BurstDebugInformation_DoNotShip/
+
+# Assets
+ContentPackages/
+/[Aa]ssets/UnityXRContent/
+/[Aa]ssets/Samples/
+
+
+## IDEs
+.vscode
+.idea
+
