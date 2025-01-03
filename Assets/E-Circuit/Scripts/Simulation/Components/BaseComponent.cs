@@ -7,7 +7,7 @@ namespace ECircuit.Simulation.Components
 {
     public abstract class BaseComponent : MonoBehaviour
     {
-        public abstract string ComponentName { get; set; }
+        public string ComponentName { get => name; set => name = value; }
 
         public abstract IEnumerable<Connector> Connectors { get; }
 

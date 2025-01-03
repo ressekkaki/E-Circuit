@@ -35,6 +35,10 @@ namespace ECircuit
 
         public void Update()
         {
+            if (m_Connection == null || m_Connection.ConnectedTo == null)
+            {
+                return;
+            }
             LineRenderer[] childLines = GetComponentsInChildren<LineRenderer>();
 
             if (childLines.Length != m_Connection.ConnectedTo.Count)
@@ -46,12 +50,9 @@ namespace ECircuit
                 m_Wires.Clear();
             }
 
-            for (int i = 0; i < m_Connection.ConnectedTo.Count; i++)
+            foreach (var c in m_Connection.ConnectedTo)
             {
-                Connector c = m_Connection.ConnectedTo[i];
-                LineRenderer wire = null;
-
-                if (c == null || !m_Wires.TryGetValue(c, out wire))
+                if (c == null || !m_Wires.TryGetValue(c, out LineRenderer wire))
                 {
                     wire = new GameObject("Rendered Wire").AddComponent<LineRenderer>();
                     wire.transform.SetParent(transform);

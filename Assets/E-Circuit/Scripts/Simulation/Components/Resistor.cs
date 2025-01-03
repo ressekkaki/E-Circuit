@@ -9,10 +9,6 @@ namespace ECircuit.Simulation
     public class Resistor : BaseComponent
     {
         [SerializeField]
-        [Tooltip("The name of the resistor, must be unique. Automatically generated when null.")]
-        private string m_ComponentName;
-
-        [SerializeField]
         [Tooltip("Positive connector of the resistor")]
         private Connector m_Positive;
 
@@ -23,12 +19,6 @@ namespace ECircuit.Simulation
         [SerializeField]
         [Tooltip("The resistance of the resistor, in Ohms")]
         private double m_Resistance = 100.0;
-
-        public override string ComponentName
-        {
-            get => m_ComponentName;
-            set => m_ComponentName = value;
-        }
 
         public override IEnumerable<Connector> Connectors
         {
@@ -43,8 +33,10 @@ namespace ECircuit.Simulation
 
         public override IEntity BuildEntity()
         {
-            Debug.Log($"Building Resistor: Name={ComponentName}, Positive={m_Positive.Connection.ConnectionName}, Negative={m_Negative.Connection.ConnectionName}, Resistance={m_Resistance}Ω");
-            return new SpiceSharp.Components.Resistor(ComponentName, m_Positive.Connection.ConnectionName, m_Negative.Connection.ConnectionName, m_Resistance);
+            var pos = m_Positive.ConnectionName;
+            var neg = m_Negative.ConnectionName;
+            Debug.Log($"Building Resistor: Name={ComponentName}, Positive={m_Positive.ConnectionName}, Negative={m_Negative.ConnectionName}, Resistance={m_Resistance}Ω");
+            return new SpiceSharp.Components.Resistor(ComponentName, pos, neg, m_Resistance);
         }
 
         public override string RandomName()

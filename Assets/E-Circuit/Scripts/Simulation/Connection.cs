@@ -7,10 +7,6 @@ namespace ECircuit.Simulation
     public class Connection : MonoBehaviour
     {
         [SerializeField]
-        [Tooltip("The UNIQUE name of this connection, automatically generated when null")]
-        private string m_ConnectionName;
-
-        [SerializeField]
         [Tooltip("The list of connectors this connector is connected to.")]
         private List<Connector> m_ConnectedTo;
 
@@ -20,24 +16,34 @@ namespace ECircuit.Simulation
 
         public string ConnectionName
         {
-            get => m_ConnectionName;
-            set => m_ConnectionName = value;
+            get => name;
+            set => name = value;
         }
 
-        public List<Connector> ConnectedTo
+        public IList<Connector> ConnectedTo
         {
             get => m_ConnectedTo;
         }
 
         public void Awake()
         {
+            m_ConnectedTo ??= new List<Connector>();
             foreach (var connector in m_ConnectedTo)
             {
                 connector.Connection = this;
             }
         }
 
-        public string RandomName()
+        private void OnDestroy()
+        {
+            List<Connector> toRemove = new(m_ConnectedTo);
+            foreach (var connector in toRemove)
+            {
+                connector.Connection = null;
+            }
+        }
+
+        public static string RandomName()
         {
             return $"W-{Guid.NewGuid()}";
         }
@@ -46,6 +52,14 @@ namespace ECircuit.Simulation
         {
             get => m_CurrentVoltage;
             set => m_CurrentVoltage = value;
+        }
+
+        public static void DestroyIfInvalid(Connection connection)
+        {
+            if (connection != null && connection.m_ConnectedTo.Count < 2)
+            {
+                Destroy(connection.gameObject);
+            }
         }
     }
 }

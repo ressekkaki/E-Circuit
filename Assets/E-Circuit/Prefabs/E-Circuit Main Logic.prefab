@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3123885502169282167}
   - component: {fileID: 4465579212587858078}
+  - component: {fileID: 6426096553579079524}
   m_Layer: 0
   m_Name: E-Circuit Main Logic
   m_TagString: Untagged
@@ -45,3 +46,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MainGenerator: {fileID: 0}
+--- !u!114 &6426096553579079524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003382427392287054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03240cff9b21140689c268f714a4d234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_inputActions: {fileID: -944628639613478452, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_camera: {fileID: 0}
+  m_simulator: {fileID: 4465579212587858078}
+  m_connectionPrefab: {fileID: 2223061091869966609, guid: 94ea22888f33ab2dfb2a9f119e029ab4,
+    type: 3}
+  m_selectedConnector: {fileID: 0}
