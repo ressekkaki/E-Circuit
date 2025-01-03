@@ -9,10 +9,6 @@ namespace ECircuit.Simulation.Components
     public class Generator : BaseComponent
     {
         [SerializeField]
-        [Tooltip("The name of the resistor, must be unique. Automatically generated when null.")]
-        private string m_ComponentName;
-
-        [SerializeField]
         [Tooltip("Positive connector of the generator")]
         private Connector m_Positive;
 
@@ -24,12 +20,6 @@ namespace ECircuit.Simulation.Components
         [SerializeField]
         [Tooltip("The voltage of the generator, in Volts")]
         private double m_Voltage = 5.0f;
-
-        public override string ComponentName
-        {
-            get => m_ComponentName;
-            set => m_ComponentName = value;
-        }
 
         public override IEnumerable<Connector> Connectors
         {
@@ -44,8 +34,11 @@ namespace ECircuit.Simulation.Components
 
         public override IEntity BuildEntity()
         {
-            Debug.Log($"Building Generator: Name={ComponentName}, Positive={m_Positive.Connection.ConnectionName}, Negative={m_Negative.Connection.ConnectionName}, Voltage={m_Voltage}V");
-            return new VoltageSource(ComponentName, m_Positive.Connection.ConnectionName, m_Negative.Connection.ConnectionName, m_Voltage);
+            var pos = m_Positive.ConnectionName;
+            var neg = m_Negative.ConnectionName;
+            Debug.Log($"Building Generator: Name={ComponentName}, Positive={m_Positive.ConnectionName}, Negative={m_Negative.Connection.ConnectionName}, Voltage={m_Voltage}V");
+            // TODO: Negative connection is special and should always be called "0" (the ground)
+            return new VoltageSource(ComponentName, pos, neg, m_Voltage);
         }
 
         public override string RandomName()

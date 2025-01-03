@@ -4,6 +4,7 @@ using UnityEngine;
 using ECircuit.Simulation.Components;
 using System.Linq;
 using SpiceSharp.Simulations;
+using SpiceSharp.Validation;
 
 namespace ECircuit.Simulation
 {
@@ -109,11 +110,16 @@ namespace ECircuit.Simulation
                 }
                 if (needNewName)
                 {
-                    name = connection.RandomName();
+                    name = Connection.RandomName();
                     connection.ConnectionName = name;
                     connectionsByName.Add(name, connection);
                 }
             }
+        }
+
+        public void SetSimulationNeeded()
+        {
+            m_DidSimulate = false;
         }
 
         private void Simulate(Circuit circuit)
@@ -127,13 +133,48 @@ namespace ECircuit.Simulation
             var scCircuit = new SpiceSharp.Circuit(circuit.Components.Select(c => c.BuildEntity()));
             var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { 5.0 }) });
 
-            foreach (var _ in dc.Run(scCircuit))
+            try
             {
-                foreach (var connection in circuit.Connections)
+
+                foreach (var _ in dc.Run(scCircuit))
                 {
-                    connection.CurrentVoltage = dc.GetVoltage(connection.ConnectionName);
+                    foreach (var connection in circuit.Connections)
+                    {
+                        connection.CurrentVoltage = dc.GetVoltage(connection.ConnectionName);
+                    }
                 }
             }
+            catch (ValidationFailedException e)
+            {
+                PrintRuleViolations(e);
+            }
+        }
+
+        private static void PrintRuleViolations(ValidationFailedException e)
+        {
+            foreach (var rule in e.Rules)
+            {
+                if (rule.ViolationCount == 0)
+                    continue;
+                Debug.LogError($"{rule}: ");
+                foreach (var violation in rule.Violations)
+                {
+                    Debug.LogError($"- {violation}");
+                    if (violation is FloatingNodeRuleViolation fv)
+                    {
+                        Debug.LogError($"  Cond. Type: {fv.Type}, Floating: ${fv.FloatingVariable}, Fixed: {fv.FixedVariable}");
+                    }
+                    else if (violation is VoltageLoopRuleViolation lv)
+                    {
+                        Debug.LogError($"  Subject: {lv.Subject}, First: {lv.First}, Second: {lv.Second}");
+                    }
+                    else if (violation is VariablePresenceRuleViolation vv)
+                    {
+                        Debug.LogError($"  Subject: {vv.Subject}, Variable: {vv.Variable}");
+                    }
+                }
+            }
+
         }
     }
 
