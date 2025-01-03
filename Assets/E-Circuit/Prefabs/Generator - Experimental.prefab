@@ -275,6 +275,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fae3fd46ed7f86084803c07959ae13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Owner: {fileID: 7560855564084897336}
+  m_Connection: {fileID: 0}
 --- !u!1 &2058830662306587591
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +288,6 @@ GameObject:
   - component: {fileID: 7722807284506437544}
   - component: {fileID: 5958013038622287235}
   - component: {fileID: 2520013127780102662}
-  - component: {fileID: 2650486946964526322}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -362,20 +363,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2650486946964526322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058830662306587591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 764cdab2d2b850e80b4f60574ec748da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Positive: {fileID: 1059733126507301153}
-  m_Negative: {fileID: 1661536878146179057}
 --- !u!1 &2112088876172135187
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1109200107396739440}
+  - component: {fileID: 7560855564084897336}
   m_Layer: 0
   m_Name: Generator - Experimental
   m_TagString: Untagged
@@ -413,6 +401,22 @@ Transform:
   - {fileID: 8141961179957743684}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7560855564084897336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112088876172135187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 764cdab2d2b850e80b4f60574ec748da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentName: 
+  m_Positive: {fileID: 1059733126507301153}
+  m_Negative: {fileID: 1661536878146179057}
+  m_Voltage: 5
 --- !u!1 &4215998758000342685
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +692,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fae3fd46ed7f86084803c07959ae13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Owner: {fileID: 7560855564084897336}
+  m_Connection: {fileID: 0}
 --- !u!1 &9199771592024952204
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,10 @@ namespace ECircuit.Simulation
         [Tooltip("The list of connectors this connector is connected to.")]
         private List<Connector> m_ConnectedTo;
 
+        [Header("Simulation Values DO NOT EDIT")]
+        [SerializeField]
+        private double m_CurrentVoltage = 0.0;
+
         public string ConnectionName
         {
             get => m_ConnectionName;
@@ -31,6 +35,17 @@ namespace ECircuit.Simulation
             {
                 connector.Connection = this;
             }
+        }
+
+        public string RandomName()
+        {
+            return $"W-{Guid.NewGuid()}";
+        }
+
+        public double CurrentVoltage
+        {
+            get => m_CurrentVoltage;
+            set => m_CurrentVoltage = value;
         }
     }
 }
