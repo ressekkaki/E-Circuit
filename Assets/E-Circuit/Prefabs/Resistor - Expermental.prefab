@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9054986049324719126}
+  - component: {fileID: 7764325304096369728}
   m_Layer: 0
   m_Name: Resistor - Expermental
   m_TagString: Untagged
@@ -37,6 +38,22 @@ Transform:
   - {fileID: 5385116355426342346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7764325304096369728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993713481665065601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0db2729c90f869c397a52aefbd9df62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentName: 
+  m_Positive: {fileID: 7173016586038227838}
+  m_Negative: {fileID: 476171583190637640}
+  m_Resistance: 100
 --- !u!1 &5020624689527851338
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fae3fd46ed7f86084803c07959ae13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Owner: {fileID: 7764325304096369728}
+  m_Connection: {fileID: 0}
 --- !u!1 &6690667265236452144
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,6 +430,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fae3fd46ed7f86084803c07959ae13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Owner: {fileID: 7764325304096369728}
+  m_Connection: {fileID: 0}
 --- !u!1 &6835453624432599482
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,7 +443,6 @@ GameObject:
   - component: {fileID: 203030180773410815}
   - component: {fileID: 1587950844333625451}
   - component: {fileID: 2731016098234883751}
-  - component: {fileID: 2431116567679207735}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -498,20 +518,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2431116567679207735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6835453624432599482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0db2729c90f869c397a52aefbd9df62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Positive: {fileID: 7173016586038227838}
-  m_Negative: {fileID: 476171583190637640}
 --- !u!1 &6991945721460897162
 GameObject:
   m_ObjectHideFlags: 0

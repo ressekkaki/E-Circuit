@@ -1,10 +1,15 @@
 using UnityEngine;
+using ECircuit.Simulation.Components;
 
 namespace ECircuit.Simulation
 {
 
     public class Connector : MonoBehaviour
     {
+
+        [SerializeField]
+        private BaseComponent m_Owner = null;
+
         [SerializeField]
         [Header("DO NOT CHANGE IN EDITOR")]
         [Tooltip("The connection this connector is a part of.")]
@@ -23,6 +28,12 @@ namespace ECircuit.Simulation
                 m_Connection = value;
             }
             get => m_Connection;
+        }
+
+        public BaseComponent Owner
+        {
+            get => m_Owner;
+            set => m_Owner = value;
         }
     }
 }
