@@ -150,6 +150,12 @@ namespace ECircuit
             from.Connection = connFrom;
             to.Connection = connFrom;
 
+            // Special case: the ground connection should always be called "0"
+            if (connFrom.ConnectedTo.Contains(m_simulator.MainGenerator.Negative) && connFrom.name != "0")
+            {
+                connFrom.name = "0";
+            }
+
             Connection.DestroyIfInvalid(connTo);
             m_simulator.SetSimulationNeeded();
         }

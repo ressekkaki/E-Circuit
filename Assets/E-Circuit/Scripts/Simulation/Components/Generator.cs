@@ -21,6 +21,8 @@ namespace ECircuit.Simulation.Components
         [Tooltip("The voltage of the generator, in Volts")]
         private double m_Voltage = 5.0f;
 
+        public Connector Negative { get => m_Negative; }
+
         public override IEnumerable<Connector> Connectors
         {
             get => new Connector[2] { m_Positive, m_Negative };
@@ -37,7 +39,6 @@ namespace ECircuit.Simulation.Components
             var pos = m_Positive.ConnectionName;
             var neg = m_Negative.ConnectionName;
             Debug.Log($"Building Generator: Name={ComponentName}, Positive={m_Positive.ConnectionName}, Negative={m_Negative.Connection.ConnectionName}, Voltage={m_Voltage}V");
-            // TODO: Negative connection is special and should always be called "0" (the ground)
             return new VoltageSource(ComponentName, pos, neg, m_Voltage);
         }
 
