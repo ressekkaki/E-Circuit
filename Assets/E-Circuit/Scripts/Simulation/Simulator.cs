@@ -15,6 +15,7 @@ namespace ECircuit.Simulation
 
         private bool m_DidSimulate = false;
 
+        public Generator MainGenerator { get => m_MainGenerator; }
 
         public void Awake()
         {
