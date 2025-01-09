@@ -35,7 +35,7 @@ namespace ECircuit.Simulation
         {
             var pos = m_Positive.ConnectionName;
             var neg = m_Negative.ConnectionName;
-            Debug.Log($"Building Resistor: Name={ComponentName}, Positive={m_Positive.ConnectionName}, Negative={m_Negative.ConnectionName}, Resistance={m_Resistance}Ω");
+            Debug.Log($"Building Resistor: Name={ComponentName}, Positive={pos}, Negative={neg}, Resistance={m_Resistance}Ω");
             return new SpiceSharp.Components.Resistor(ComponentName, pos, neg, m_Resistance);
         }
 
