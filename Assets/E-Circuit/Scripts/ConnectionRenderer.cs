@@ -56,7 +56,7 @@ namespace ECircuit
             {
                 RenderWire();
             }
-            if (m_simulator != null && m_VoltageIndicatorPrefab != null && m_simulator.DidSimulate)
+            if (m_simulator != null && m_VoltageIndicatorPrefab != null)
             {
                 RenderVoltage();
             }

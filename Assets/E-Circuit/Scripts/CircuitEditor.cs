@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using ECircuit.Simulation;
 using ECircuit.Simulation.Components;
 using UnityEngine;
@@ -11,9 +13,6 @@ namespace ECircuit
     public class CircuitEditor : MonoBehaviour
     {
         [SerializeField]
-        [Tooltip("The input actions asset, leave empty to use the default one")]
-        private InputActionAsset m_inputActions;
-        [SerializeField]
         [Tooltip("The camera to use, leave empty to use the default one")]
         private Camera m_camera;
         [SerializeField]
@@ -22,8 +21,22 @@ namespace ECircuit
         [SerializeField]
         [Tooltip("The prefab to use for connections, cannot be null")]
         private GameObject m_connectionPrefab;
+
+        [Header("Controls")]
+        [SerializeField]
+        [Tooltip("The input actions asset, leave empty to use the default one")]
+        private InputActionAsset m_inputActions;
         [SerializeField]
         private float m_ComponentDeleteDelaySeconds = 0.4f;
+
+        [Header("Component Prefabs")]
+        [SerializeField]
+        [Tooltip("The prefab to use for generators")]
+        private GameObject m_generatorPrefab;
+        [SerializeField]
+        [Tooltip("The prefab to use for resistors")]
+        private GameObject m_resistorPrefab;
+
 
         [Header("Runtime Values, DO NOT CHANGE IN EDITOR")]
         [SerializeField]
@@ -32,8 +45,9 @@ namespace ECircuit
         [Tooltip("The initial color of the selected connector")]
         private Color m_selectedConnectorInitialColor;
 
-        private InputAction m_InteractAction;
         private Coroutine m_HoldInteractCoroutine;
+
+        private readonly List<Action> m_CleanupActions = new();
 
         private void Awake()
         {
@@ -42,10 +56,18 @@ namespace ECircuit
             {
                 m_camera = Camera.main;
             }
-            m_InteractAction ??= m_inputActions.FindActionMap("Player").FindAction("Interact", throwIfNotFound: true);
-            m_InteractAction.started += OnInteractActionStarted;
-            m_InteractAction.canceled += OnInteractActionCanceled;
-            m_InteractAction.performed += OnInteractActionPerformed;
+            InputAction interactAction = m_inputActions.FindActionMap("Player").FindAction("Interact", throwIfNotFound: true);
+            interactAction.started += OnInteractActionStarted;
+            interactAction.canceled += OnInteractActionCanceled;
+            interactAction.performed += OnInteractActionPerformed;
+            m_CleanupActions.Add(() =>
+            {
+                interactAction.started -= OnInteractActionStarted;
+                interactAction.canceled -= OnInteractActionCanceled;
+                interactAction.performed -= OnInteractActionPerformed;
+            });
+            AddSpawnComponentAction<Generator>("Spawn Generator", m_generatorPrefab);
+            AddSpawnComponentAction<Resistor>("Spawn Resistor", m_resistorPrefab);
             if (m_simulator == null)
             {
                 m_simulator = FindFirstObjectByType<Simulator>();
@@ -54,9 +76,11 @@ namespace ECircuit
 
         private void OnDestroy()
         {
-            m_InteractAction.started -= OnInteractActionStarted;
-            m_InteractAction.canceled -= OnInteractActionCanceled;
-            m_InteractAction.performed -= OnInteractActionPerformed;
+            foreach (var cleanup in m_CleanupActions)
+            {
+                cleanup();
+            }
+            m_CleanupActions.Clear();
         }
 
         private void OnInteractActionStarted(InputAction.CallbackContext context)
@@ -112,15 +136,50 @@ namespace ECircuit
             }
         }
 
+        private void OnSpawnComponentActionPerformed<T>(GameObject prefab) where T : BaseComponent
+        {
+            if (!RaycastComponent(out CircuitSurfaceMarker marker, out RaycastHit hit))
+            {
+                return;
+            }
+
+            GameObject obj = Instantiate(prefab, hit.point, Quaternion.identity);
+            obj.transform.parent = marker.transform;
+            BaseComponent component = obj.GetComponent<T>();
+            component.name = component.RandomName();
+            component.ComponentName = component.name;
+            m_simulator.NeedSimulation = true;
+        }
+
+        private void AddSpawnComponentAction<T>(string actionName, GameObject prefab) where T : BaseComponent
+        {
+            InputAction action = m_inputActions.FindActionMap("Player").FindAction(actionName);
+            if (action != null)
+            {
+                void onPerform(InputAction.CallbackContext context)
+                {
+                    OnSpawnComponentActionPerformed<T>(prefab);
+                }
+                action.performed += onPerform;
+                m_CleanupActions.Add(() => action.performed -= onPerform);
+            }
+        }
+
         private bool RaycastComponent<T>(out T component)
+        {
+            return RaycastComponent(out component, out _);
+        }
+
+        private bool RaycastComponent<T>(out T component, out RaycastHit hit)
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
             Ray ray = m_camera.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider.gameObject.TryGetComponent(out component))
+            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent(out component))
             {
                 return true;
             }
             component = default;
+            hit = default;
             return false;
         }
 
@@ -151,7 +210,7 @@ namespace ECircuit
         {
             Debug.Log($"Deleting component {component}");
             Destroy(component.gameObject);
-            m_simulator.SetSimulationNeeded();
+            m_simulator.NeedSimulation = true;
         }
 
         private void UnselectConnector()
@@ -186,7 +245,7 @@ namespace ECircuit
             to.Connection = null;
             Connection.DestroyIfInvalid(connFrom);
             Connection.DestroyIfInvalid(connTo);
-            m_simulator.SetSimulationNeeded();
+            m_simulator.NeedSimulation = true;
         }
 
         private void Connect(Connector from, Connector to)
@@ -213,13 +272,23 @@ namespace ECircuit
             to.Connection = connFrom;
 
             // Special case: the ground connection should always be called "0"
-            if (connFrom.ConnectedTo.Contains(m_simulator.MainGenerator.Negative) && connFrom.name != "0")
+            if (IsGroundConnection(connFrom) && connFrom.name != "0")
             {
                 connFrom.name = "0";
             }
 
             Connection.DestroyIfInvalid(connTo);
-            m_simulator.SetSimulationNeeded();
+            m_simulator.NeedSimulation = true;
+        }
+
+        private bool IsGroundConnection(Connection connection)
+        {
+            Generator generator = m_simulator.MainGenerator;
+            if (connection == null || generator == null || generator.Negative == null)
+            {
+                return false;
+            }
+            return connection.ConnectedTo.Contains(generator.Negative);
         }
     }
 }
