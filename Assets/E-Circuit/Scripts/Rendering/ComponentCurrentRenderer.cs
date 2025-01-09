@@ -2,27 +2,28 @@ using ECircuit.Simulation;
 using ECircuit.Simulation.Components;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace ECircuit.Rendering
 {
-    [RequireComponent(typeof(TextMeshPro))]
     public class ComponentCurrentRenderer : MonoBehaviour
     {
         [SerializeField]
         private BaseComponent m_Component;
         [SerializeField]
+        private TextMeshPro m_Text;
+        [SerializeField]
         [Tooltip("The simulator to use, leave empty to use the default one")]
         private Simulator m_simulator;
 
-        private TextMeshPro m_Text;
 
         public void Awake()
         {
-            m_Text = GetComponent<TextMeshPro>();
             if (m_simulator == null)
             {
                 m_simulator = FindFirstObjectByType<Simulator>();
             }
+            Assert.IsNotNull(m_Text);
         }
 
         // Update is called once per frame
