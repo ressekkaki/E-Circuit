@@ -31,12 +31,12 @@ namespace ECircuit.Simulation
             set => m_Resistance = value;
         }
 
-        public override IEntity BuildEntity()
+        public override IEnumerable<IEntity> BuildEntity()
         {
             var pos = m_Positive.ConnectionName;
             var neg = m_Negative.ConnectionName;
             Debug.Log($"Building Resistor: Name={ComponentName}, Positive={pos}, Negative={neg}, Resistance={m_Resistance}Ω");
-            return new SpiceSharp.Components.Resistor(ComponentName, pos, neg, m_Resistance);
+            yield return new SpiceSharp.Components.Resistor(ComponentName, pos, neg, m_Resistance);
         }
 
         public override string RandomName()

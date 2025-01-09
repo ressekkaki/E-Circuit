@@ -19,7 +19,7 @@ namespace ECircuit.Simulation.Components
         /// <summary>
         /// Realizes the component as a SpiceSharp circuit entity.
         /// </summary>
-        public abstract IEntity BuildEntity();
+        public abstract IEnumerable<IEntity> BuildEntity();
 
         public virtual string RandomName()
         {

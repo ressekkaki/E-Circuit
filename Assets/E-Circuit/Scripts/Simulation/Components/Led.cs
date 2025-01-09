@@ -38,12 +38,12 @@ namespace ECircuit.Simulation
             get => new Connector[2] { m_Positive, m_Negative };
         }
 
-        public override IEntity BuildEntity()
+        public override IEnumerable<IEntity> BuildEntity()
         {
             var pos = m_Positive.ConnectionName;
             var neg = m_Negative.ConnectionName;
             Debug.Log($"Building LED: Name={ComponentName}, Positive={pos}, Negative={neg}");
-            return new SpiceSharp.Components.Diode(ComponentName, pos, neg, "DiodeModel");
+            yield return new SpiceSharp.Components.Diode(ComponentName, pos, neg, "DiodeModel");
         }
 
         public override string RandomName()
