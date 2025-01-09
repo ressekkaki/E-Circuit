@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ECircuit.Simulation.Components;
 using System.Linq;
 using SpiceSharp.Simulations;
 using SpiceSharp.Validation;
+using SpiceSharp.Components;
 
 namespace ECircuit.Simulation
 {
@@ -148,8 +148,10 @@ namespace ECircuit.Simulation
                 Debug.LogError("Main generator is not set, cannot simulate");
                 return;
             }
-
-            var scCircuit = new SpiceSharp.Circuit(circuit.Components.Select(c => c.BuildEntity()));
+            var scCircuit = new SpiceSharp.Circuit(circuit.Components.Select(c => c.BuildEntity()))
+            {
+                new DiodeModel("DiodeModel")
+            };
             var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { 5.0 }) });
 
             try
@@ -160,6 +162,10 @@ namespace ECircuit.Simulation
                     foreach (var connection in circuit.Connections)
                     {
                         connection.CurrentVoltage = dc.GetVoltage(connection.ConnectionName);
+                    }
+                    if (dc.TryGetCurrent(m_MainGenerator.ComponentName, out double mainCurrent))
+                    {
+                        Debug.Log($"Main generator current: {mainCurrent * 1000:G3}mA");
                     }
                 }
                 DidSimulate = true;

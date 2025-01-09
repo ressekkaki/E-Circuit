@@ -37,6 +37,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Spawn Diode"",
+                    ""type"": ""Button"",
+                    ""id"": ""3fd4a865-6e7e-4d40-899c-9c0e7cb0f9b5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Spawn Generator"",
                     ""type"": ""Button"",
                     ""id"": ""a8e57edf-975b-4afe-b42f-5fe6aef65702"",
@@ -143,6 +152,39 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Spawn Resistor"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Alt+D"",
+                    ""id"": ""75e43ba0-f9ba-4b39-869e-526e52b739b0"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spawn Diode"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""83f14a48-50cf-436e-8ee8-b26c46cce423"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard And Mouse"",
+                    ""action"": ""Spawn Diode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""fec1b9da-6fdb-4d70-87bd-b9a6debf2feb"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard And Mouse"",
+                    ""action"": ""Spawn Diode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -180,6 +222,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_SpawnDiode = m_Player.FindAction("Spawn Diode", throwIfNotFound: true);
         m_Player_SpawnGenerator = m_Player.FindAction("Spawn Generator", throwIfNotFound: true);
         m_Player_SpawnResistor = m_Player.FindAction("Spawn Resistor", throwIfNotFound: true);
     }
@@ -249,6 +292,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_SpawnDiode;
     private readonly InputAction m_Player_SpawnGenerator;
     private readonly InputAction m_Player_SpawnResistor;
     public struct PlayerActions
@@ -256,6 +300,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         private @InputActions m_Wrapper;
         public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @SpawnDiode => m_Wrapper.m_Player_SpawnDiode;
         public InputAction @SpawnGenerator => m_Wrapper.m_Player_SpawnGenerator;
         public InputAction @SpawnResistor => m_Wrapper.m_Player_SpawnResistor;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -270,6 +315,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @SpawnDiode.started += instance.OnSpawnDiode;
+            @SpawnDiode.performed += instance.OnSpawnDiode;
+            @SpawnDiode.canceled += instance.OnSpawnDiode;
             @SpawnGenerator.started += instance.OnSpawnGenerator;
             @SpawnGenerator.performed += instance.OnSpawnGenerator;
             @SpawnGenerator.canceled += instance.OnSpawnGenerator;
@@ -283,6 +331,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @SpawnDiode.started -= instance.OnSpawnDiode;
+            @SpawnDiode.performed -= instance.OnSpawnDiode;
+            @SpawnDiode.canceled -= instance.OnSpawnDiode;
             @SpawnGenerator.started -= instance.OnSpawnGenerator;
             @SpawnGenerator.performed -= instance.OnSpawnGenerator;
             @SpawnGenerator.canceled -= instance.OnSpawnGenerator;
@@ -327,6 +378,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnInteract(InputAction.CallbackContext context);
+        void OnSpawnDiode(InputAction.CallbackContext context);
         void OnSpawnGenerator(InputAction.CallbackContext context);
         void OnSpawnResistor(InputAction.CallbackContext context);
     }
