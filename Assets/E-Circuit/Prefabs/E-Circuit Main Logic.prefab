@@ -64,4 +64,5 @@ MonoBehaviour:
   m_simulator: {fileID: 4465579212587858078}
   m_connectionPrefab: {fileID: 2223061091869966609, guid: 94ea22888f33ab2dfb2a9f119e029ab4,
     type: 3}
+  m_ComponentDeleteDelaySeconds: 0.4
   m_selectedConnector: {fileID: 0}

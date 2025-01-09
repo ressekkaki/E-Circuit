@@ -28,9 +28,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             ""id"": ""ae361370-3f46-4d89-b647-13295d4677df"",
             ""actions"": [
                 {
-                    ""name"": ""Select Connector"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
-                    ""id"": ""35e50806-6bd3-43d5-97b9-ba427619ecf3"",
+                    ""id"": ""3ee878df-1cd5-4b09-b1aa-ab4dfdf6ca23"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -40,23 +40,40 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""7afecb92-eabb-4d1b-b1dd-7628ed9ebbe4"",
+                    ""id"": ""172e212d-bb19-414d-b787-8d8fb05af089"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Select Connector"",
+                    ""groups"": "";Keyboard/Mouse"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""Keyboard/Mouse"",
+            ""bindingGroup"": ""Keyboard/Mouse"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_SelectConnector = m_Player.FindAction("Select Connector", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -123,12 +140,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_SelectConnector;
+    private readonly InputAction m_Player_Interact;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
         public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @SelectConnector => m_Wrapper.m_Player_SelectConnector;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -138,16 +155,16 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @SelectConnector.started += instance.OnSelectConnector;
-            @SelectConnector.performed += instance.OnSelectConnector;
-            @SelectConnector.canceled += instance.OnSelectConnector;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @SelectConnector.started -= instance.OnSelectConnector;
-            @SelectConnector.performed -= instance.OnSelectConnector;
-            @SelectConnector.canceled -= instance.OnSelectConnector;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -165,8 +182,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+    private int m_KeyboardMouseSchemeIndex = -1;
+    public InputControlScheme KeyboardMouseScheme
+    {
+        get
+        {
+            if (m_KeyboardMouseSchemeIndex == -1) m_KeyboardMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard/Mouse");
+            return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
+        }
+    }
     public interface IPlayerActions
     {
-        void OnSelectConnector(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

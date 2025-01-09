@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9054986049324719126}
   - component: {fileID: 7764325304096369728}
+  - component: {fileID: 3139653917531364213}
   m_Layer: 0
   m_Name: Resistor - Expermental
   m_TagString: Untagged
@@ -50,10 +51,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0db2729c90f869c397a52aefbd9df62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ComponentName: 
   m_Positive: {fileID: 7173016586038227838}
   m_Negative: {fileID: 476171583190637640}
   m_Resistance: 100
+--- !u!65 &3139653917531364213
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993713481665065601}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5020624689527851338
 GameObject:
   m_ObjectHideFlags: 0

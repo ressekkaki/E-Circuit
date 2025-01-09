@@ -6,9 +6,9 @@
             "id": "ae361370-3f46-4d89-b647-13295d4677df",
             "actions": [
                 {
-                    "name": "Select Connector",
+                    "name": "Interact",
                     "type": "Button",
-                    "id": "35e50806-6bd3-43d5-97b9-ba427619ecf3",
+                    "id": "3ee878df-1cd5-4b09-b1aa-ab4dfdf6ca23",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -18,17 +18,34 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "7afecb92-eabb-4d1b-b1dd-7628ed9ebbe4",
+                    "id": "172e212d-bb19-414d-b787-8d8fb05af089",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Select Connector",
+                    "groups": ";Keyboard/Mouse",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "Keyboard/Mouse",
+            "bindingGroup": "Keyboard/Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

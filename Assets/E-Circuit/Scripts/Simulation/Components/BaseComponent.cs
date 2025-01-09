@@ -20,5 +20,15 @@ namespace ECircuit.Simulation.Components
         {
             return $"C-{Guid.NewGuid()}";
         }
+
+        private void OnDestroy()
+        {
+            foreach (var connector in Connectors)
+            {
+                var connection = connector.Connection;
+                connector.Connection = null;
+                Connection.DestroyIfInvalid(connection);
+            }
+        }
     }
 }
