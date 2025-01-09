@@ -11,40 +11,56 @@ namespace ECircuit.Simulation
     public class Simulator : MonoBehaviour
     {
         [SerializeField]
-        private Generator m_MainGenerator;
+        private GameObject m_CircuitRoot;
 
-        private bool m_DidSimulate = false;
+        [SerializeField]
+        [Tooltip("The main generator of the circuit, leave empty to use the first generator found")]
+        private Generator m_MainGenerator;
 
         public Generator MainGenerator { get => m_MainGenerator; }
 
-        public bool DidSimulate { get => m_DidSimulate; }
+        public bool NeedSimulation { get; set; } = true;
+        public bool DidSimulate { get; private set; } = false;
 
         public void Awake()
         {
-            m_DidSimulate = false;
+            NeedSimulation = true;
+            DidSimulate = false;
         }
 
         public void OnDisable()
         {
-            m_DidSimulate = false;
+            NeedSimulation = true;
+            DidSimulate = false;
         }
 
         public void OnEnable()
         {
-            m_DidSimulate = false;
+            NeedSimulation = true;
+            DidSimulate = false;
         }
 
         public void Update()
         {
-            if (m_DidSimulate)
+            if (!NeedSimulation)
             {
                 return;
             }
-            m_DidSimulate = true;
+            NeedSimulation = false;
+            DidSimulate = false;
+            FindMainGenerator();
             var circuit = GatherCircuitComponents();
             Debug.Log($"Gathered circuit components, {circuit.Components.Count} components and {circuit.Connections.Count} connections");
             CheckCircuitNames(circuit);
             Simulate(circuit);
+        }
+
+        private void FindMainGenerator()
+        {
+            if (m_CircuitRoot != null && m_MainGenerator == null)
+            {
+                m_MainGenerator = m_CircuitRoot.GetComponentInChildren<Generator>(true);
+            }
         }
 
         private Circuit GatherCircuitComponents()
@@ -122,7 +138,7 @@ namespace ECircuit.Simulation
 
         public void SetSimulationNeeded()
         {
-            m_DidSimulate = false;
+            NeedSimulation = false;
         }
 
         private void Simulate(Circuit circuit)
@@ -146,6 +162,7 @@ namespace ECircuit.Simulation
                         connection.CurrentVoltage = dc.GetVoltage(connection.ConnectionName);
                     }
                 }
+                DidSimulate = true;
             }
             catch (ValidationFailedException e)
             {
