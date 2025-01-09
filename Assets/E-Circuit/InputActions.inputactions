@@ -15,6 +15,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Spawn Diode",
+                    "type": "Button",
+                    "id": "3fd4a865-6e7e-4d40-899c-9c0e7cb0f9b5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Spawn Generator",
                     "type": "Button",
                     "id": "a8e57edf-975b-4afe-b42f-5fe6aef65702",
@@ -119,6 +128,39 @@
                     "processors": "",
                     "groups": ";Keyboard And Mouse",
                     "action": "Spawn Resistor",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Alt+D",
+                    "id": "75e43ba0-f9ba-4b39-869e-526e52b739b0",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spawn Diode",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "83f14a48-50cf-436e-8ee8-b26c46cce423",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Spawn Diode",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "fec1b9da-6fdb-4d70-87bd-b9a6debf2feb",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Spawn Diode",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdcf881d43b4829b58b281e393de66d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CircuitRoot: {fileID: 0}
   m_MainGenerator: {fileID: 0}
 --- !u!114 &6426096553579079524
 MonoBehaviour:
@@ -65,6 +66,8 @@ MonoBehaviour:
   m_inputActions: {fileID: -944628639613478452, guid: be82be06ca56ab296bf5a8ce6f70c1be,
     type: 3}
   m_ComponentDeleteDelaySeconds: 0.4
+  m_diodePrefab: {fileID: 2112088876172135187, guid: ad6745bd8e63d4c84a4d548dc4b9feb1,
+    type: 3}
   m_generatorPrefab: {fileID: 2112088876172135187, guid: 7cab8f5fc1d44d0c8a701efd38859730,
     type: 3}
   m_resistorPrefab: {fileID: 4993713481665065601, guid: a91612f9e9df114dbb654f0c83f1b0eb,

@@ -31,6 +31,9 @@ namespace ECircuit
 
         [Header("Component Prefabs")]
         [SerializeField]
+        [Tooltip("The prefab to use for diodes")]
+        private GameObject m_diodePrefab;
+        [SerializeField]
         [Tooltip("The prefab to use for generators")]
         private GameObject m_generatorPrefab;
         [SerializeField]
@@ -66,6 +69,7 @@ namespace ECircuit
                 interactAction.canceled -= OnInteractActionCanceled;
                 interactAction.performed -= OnInteractActionPerformed;
             });
+            AddSpawnComponentAction<Diode>("Spawn Diode", m_diodePrefab);
             AddSpawnComponentAction<Generator>("Spawn Generator", m_generatorPrefab);
             AddSpawnComponentAction<Resistor>("Spawn Resistor", m_resistorPrefab);
             if (m_simulator == null)
