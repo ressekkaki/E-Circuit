@@ -5,6 +5,9 @@ using System.Linq;
 using SpiceSharp.Simulations;
 using SpiceSharp.Validation;
 using SpiceSharp.Components;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using SpiceSharp.Entities;
+using System;
 
 namespace ECircuit.Simulation
 {
@@ -154,6 +157,9 @@ namespace ECircuit.Simulation
             };
             var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { 5.0 }) });
 
+            // Export the current (in Amps) of each component
+            Dictionary<BaseComponent, RealPropertyExport> currentExports = circuit.Components.ToDictionary(c => c, c => new RealPropertyExport(dc, c.ComponentName, "i"));
+
             try
             {
 
@@ -163,9 +169,9 @@ namespace ECircuit.Simulation
                     {
                         connection.CurrentVoltage = dc.GetVoltage(connection.ConnectionName);
                     }
-                    if (dc.TryGetCurrent(m_MainGenerator.ComponentName, out double mainCurrent))
+                    foreach (var entry in currentExports)
                     {
-                        Debug.Log($"Main generator current: {mainCurrent * 1000:G3}mA");
+                        entry.Key.CurrentCurrent = Math.Abs(entry.Value.Value);
                     }
                 }
                 DidSimulate = true;
