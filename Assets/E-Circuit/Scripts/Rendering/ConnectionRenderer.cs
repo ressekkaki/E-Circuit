@@ -2,6 +2,7 @@ using UnityEngine;
 using ECircuit.Simulation;
 using System.Collections.Generic;
 using TMPro;
+using System;
 
 namespace ECircuit.Rendering
 {
@@ -16,6 +17,8 @@ namespace ECircuit.Rendering
         private Material m_WireMaterial;
         [SerializeField]
         private GameObject m_VoltageIndicatorPrefab;
+        [SerializeField]
+        private double m_minThreshold = 0.00001;
         [SerializeField]
         [Tooltip("The simulator to use, leave empty to use the default one")]
         private Simulator m_simulator;
@@ -109,8 +112,9 @@ namespace ECircuit.Rendering
                 m_VoltageText.transform.SetParent(transform);
                 m_VoltageText.transform.localScale = Vector3.one;
             }
+            double voltage = m_Connection.CurrentVoltage < m_minThreshold ? 0 : m_Connection.CurrentVoltage;
             // format voltage to 2 decimal places
-            m_VoltageText.text = $"{m_Connection.CurrentVoltage:G3}V";
+            m_VoltageText.text = $"{voltage:G3}V";
         }
     }
 }

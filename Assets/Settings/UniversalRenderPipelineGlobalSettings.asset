@@ -54,7 +54,7 @@ MonoBehaviour:
       - rid: 9145189647983312914
       - rid: 9145189647983312915
       - rid: 9145189647983312916
-      - rid: 7712046262021259264
+      - rid: 7712046260317847552
     m_RuntimeSettings:
       m_List: []
   m_AssetVersion: 8
@@ -238,7 +238,7 @@ MonoBehaviour:
           type: 3}
         probeVolumeUploadDataL2CS: {fileID: 7200000, guid: 6196f34ed825db14b81fb3eb0ea8d931,
           type: 3}
-    - rid: 7712046262021259264
+    - rid: 7712046260317847552
       type: {class: UniversalRenderPipelineEditorAssets, ns: UnityEngine.Rendering.Universal,
         asm: Unity.RenderPipelines.Universal.Runtime}
       data:

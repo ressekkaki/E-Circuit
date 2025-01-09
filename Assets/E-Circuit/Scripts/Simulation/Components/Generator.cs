@@ -34,12 +34,12 @@ namespace ECircuit.Simulation.Components
             set => m_Voltage = value;
         }
 
-        public override IEntity BuildEntity()
+        public override IEnumerable<IEntity> BuildEntity()
         {
             var pos = m_Positive.ConnectionName;
             var neg = m_Negative.ConnectionName;
             Debug.Log($"Building Generator: Name={ComponentName}, Positive={pos}, Negative={neg}, Voltage={m_Voltage}V");
-            return new VoltageSource(ComponentName, pos, neg, m_Voltage);
+            yield return new VoltageSource(ComponentName, pos, neg, m_Voltage);
         }
 
         public override string RandomName()

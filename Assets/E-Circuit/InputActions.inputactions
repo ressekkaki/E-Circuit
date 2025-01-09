@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Spawn Push Button",
+                    "type": "Button",
+                    "id": "41b24711-1d78-4892-a545-0b27bb15133d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Spawn Resistor",
                     "type": "Button",
                     "id": "be3092c3-b7d7-4f52-ad78-d370d977187a",
@@ -203,6 +212,39 @@
                     "processors": "",
                     "groups": ";Keyboard And Mouse",
                     "action": "Spawn LED",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "7d859196-a89e-4a26-9505-cbd5fe6065c3",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spawn Push Button",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "40738413-89fc-4190-8984-103497e4e3e1",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Spawn Push Button",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "3ea11f24-646c-4773-ba84-5dedd8f846cf",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Spawn Push Button",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
