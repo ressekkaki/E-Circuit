@@ -36,6 +36,9 @@ namespace ECircuit
         [Tooltip("The prefab to use for generators")]
         private GameObject m_generatorPrefab;
         [SerializeField]
+        [Tooltip("The prefab to use for LEDs")]
+        private GameObject m_ledPrefab;
+        [SerializeField]
         [Tooltip("The prefab to use for resistors")]
         private GameObject m_resistorPrefab;
 
@@ -70,6 +73,7 @@ namespace ECircuit
             });
             AddSpawnComponentAction<Diode>("Spawn Diode", m_diodePrefab);
             AddSpawnComponentAction<Generator>("Spawn Generator", m_generatorPrefab);
+            AddSpawnComponentAction<Led>("Spawn LED", m_ledPrefab);
             AddSpawnComponentAction<Resistor>("Spawn Resistor", m_resistorPrefab);
             if (m_simulator == null)
             {

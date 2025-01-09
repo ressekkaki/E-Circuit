@@ -26,6 +26,11 @@ namespace ECircuit.Simulation.Components
             return $"C-{Guid.NewGuid()}";
         }
 
+        public virtual bool IsOverloaded()
+        {
+            return false;
+        }
+
         private void OnDestroy()
         {
             foreach (var connector in Connectors)

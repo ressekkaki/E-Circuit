@@ -55,6 +55,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Spawn LED"",
+                    ""type"": ""Button"",
+                    ""id"": ""cac8d5b6-9c39-493b-a47d-a607fb1cf1cc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Spawn Resistor"",
                     ""type"": ""Button"",
                     ""id"": ""be3092c3-b7d7-4f52-ad78-d370d977187a"",
@@ -185,6 +194,39 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Spawn Diode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Alt+L"",
+                    ""id"": ""edba96b8-f39e-4c61-82d2-ee7f04baa1eb"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spawn LED"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""c3b737d7-b953-46b2-b864-5f9c0f88899f"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard And Mouse"",
+                    ""action"": ""Spawn LED"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""c2f20647-87e4-4f67-b421-a6841ff67496"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard And Mouse"",
+                    ""action"": ""Spawn LED"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -224,6 +266,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_SpawnDiode = m_Player.FindAction("Spawn Diode", throwIfNotFound: true);
         m_Player_SpawnGenerator = m_Player.FindAction("Spawn Generator", throwIfNotFound: true);
+        m_Player_SpawnLED = m_Player.FindAction("Spawn LED", throwIfNotFound: true);
         m_Player_SpawnResistor = m_Player.FindAction("Spawn Resistor", throwIfNotFound: true);
     }
 
@@ -294,6 +337,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_SpawnDiode;
     private readonly InputAction m_Player_SpawnGenerator;
+    private readonly InputAction m_Player_SpawnLED;
     private readonly InputAction m_Player_SpawnResistor;
     public struct PlayerActions
     {
@@ -302,6 +346,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @SpawnDiode => m_Wrapper.m_Player_SpawnDiode;
         public InputAction @SpawnGenerator => m_Wrapper.m_Player_SpawnGenerator;
+        public InputAction @SpawnLED => m_Wrapper.m_Player_SpawnLED;
         public InputAction @SpawnResistor => m_Wrapper.m_Player_SpawnResistor;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -321,6 +366,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @SpawnGenerator.started += instance.OnSpawnGenerator;
             @SpawnGenerator.performed += instance.OnSpawnGenerator;
             @SpawnGenerator.canceled += instance.OnSpawnGenerator;
+            @SpawnLED.started += instance.OnSpawnLED;
+            @SpawnLED.performed += instance.OnSpawnLED;
+            @SpawnLED.canceled += instance.OnSpawnLED;
             @SpawnResistor.started += instance.OnSpawnResistor;
             @SpawnResistor.performed += instance.OnSpawnResistor;
             @SpawnResistor.canceled += instance.OnSpawnResistor;
@@ -337,6 +385,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @SpawnGenerator.started -= instance.OnSpawnGenerator;
             @SpawnGenerator.performed -= instance.OnSpawnGenerator;
             @SpawnGenerator.canceled -= instance.OnSpawnGenerator;
+            @SpawnLED.started -= instance.OnSpawnLED;
+            @SpawnLED.performed -= instance.OnSpawnLED;
+            @SpawnLED.canceled -= instance.OnSpawnLED;
             @SpawnResistor.started -= instance.OnSpawnResistor;
             @SpawnResistor.performed -= instance.OnSpawnResistor;
             @SpawnResistor.canceled -= instance.OnSpawnResistor;
@@ -380,6 +431,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnSpawnDiode(InputAction.CallbackContext context);
         void OnSpawnGenerator(InputAction.CallbackContext context);
+        void OnSpawnLED(InputAction.CallbackContext context);
         void OnSpawnResistor(InputAction.CallbackContext context);
     }
 }
