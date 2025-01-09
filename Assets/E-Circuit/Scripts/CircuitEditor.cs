@@ -1,7 +1,10 @@
+using System.Collections;
 using ECircuit.Simulation;
+using ECircuit.Simulation.Components;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 namespace ECircuit
 {
@@ -19,6 +22,8 @@ namespace ECircuit
         [SerializeField]
         [Tooltip("The prefab to use for connections, cannot be null")]
         private GameObject m_connectionPrefab;
+        [SerializeField]
+        private float m_ComponentDeleteDelaySeconds = 0.4f;
 
         [Header("Runtime Values, DO NOT CHANGE IN EDITOR")]
         [SerializeField]
@@ -27,7 +32,8 @@ namespace ECircuit
         [Tooltip("The initial color of the selected connector")]
         private Color m_selectedConnectorInitialColor;
 
-        private InputAction m_SelectConnectorAction;
+        private InputAction m_InteractAction;
+        private Coroutine m_HoldInteractCoroutine;
 
         private void Awake()
         {
@@ -36,8 +42,10 @@ namespace ECircuit
             {
                 m_camera = Camera.main;
             }
-            m_SelectConnectorAction ??= m_inputActions.FindActionMap("Player").FindAction("Select Connector", throwIfNotFound: true);
-            m_SelectConnectorAction.performed += OnSelectConnectorAction;
+            m_InteractAction ??= m_inputActions.FindActionMap("Player").FindAction("Interact", throwIfNotFound: true);
+            m_InteractAction.started += OnInteractActionStarted;
+            m_InteractAction.canceled += OnInteractActionCanceled;
+            m_InteractAction.performed += OnInteractActionPerformed;
             if (m_simulator == null)
             {
                 m_simulator = FindFirstObjectByType<Simulator>();
@@ -46,27 +54,74 @@ namespace ECircuit
 
         private void OnDestroy()
         {
-            m_SelectConnectorAction.performed -= OnSelectConnectorAction;
+            m_InteractAction.started -= OnInteractActionStarted;
+            m_InteractAction.canceled -= OnInteractActionCanceled;
+            m_InteractAction.performed -= OnInteractActionPerformed;
         }
 
+        private void OnInteractActionStarted(InputAction.CallbackContext context)
+        {
+            m_HoldInteractCoroutine ??= StartCoroutine(OnInteractActionHeld());
+        }
+
+
+        private void OnInteractActionCanceled(InputAction.CallbackContext context)
+        {
+            if (m_HoldInteractCoroutine != null)
+            {
+                StopCoroutine(m_HoldInteractCoroutine);
+                m_HoldInteractCoroutine = null;
+            }
+        }
+
+
         /// <summary>
-        /// Executed on "Select Connector" action (left mouse click by default).
+        /// Executed on "Interact" action (left mouse click by default).
         /// Attempts to select a connector by casting a ray from the mouse position.
         /// </summary>
-        private void OnSelectConnectorAction(InputAction.CallbackContext context)
+        private void OnInteractActionPerformed(InputAction.CallbackContext context)
         {
             if (!context.performed)
             {
                 return;
             }
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = m_camera.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider.gameObject.TryGetComponent<Connector>(out var connector))
+            if (RaycastComponent(out Connector connector))
             {
                 OnConnectorSelect(connector);
                 return;
             }
             OnConnectorSelect(null);
+        }
+
+        /// <summary>
+        /// Executed while the "Interact" action is held (left mouse click by default).
+        /// If the mouse is still on the same component after a delay, deletes the component.
+        /// </summary>
+        private IEnumerator OnInteractActionHeld()
+        {
+            if (!RaycastComponent(out BaseComponent componentStart))
+            {
+                yield break;
+            }
+            yield return new WaitForSeconds(m_ComponentDeleteDelaySeconds);
+            // Check that the component is still the same after the delay
+            if (RaycastComponent(out BaseComponent componentEnd) && componentStart == componentEnd)
+            {
+                // Hold "interact" to delete the component
+                OnComponentDelete(componentStart);
+            }
+        }
+
+        private bool RaycastComponent<T>(out T component)
+        {
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Ray ray = m_camera.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider.gameObject.TryGetComponent(out component))
+            {
+                return true;
+            }
+            component = default;
+            return false;
         }
 
         private void OnConnectorSelect(Connector connector)
@@ -90,6 +145,13 @@ namespace ECircuit
             {
                 Disconnect(previousConnector, connector);
             }
+        }
+
+        private void OnComponentDelete(BaseComponent component)
+        {
+            Debug.Log($"Deleting component {component}");
+            Destroy(component.gameObject);
+            m_simulator.SetSimulationNeeded();
         }
 
         private void UnselectConnector()
