@@ -9,6 +9,11 @@ namespace ECircuit.Simulation.Components
     {
         public string ComponentName { get => name; set => name = value; }
 
+        /// <summary>
+        /// The current flowing through the component in amperes.
+        /// </summary>
+        public double CurrentCurrent { get; set; } = 0.0;
+
         public abstract IEnumerable<Connector> Connectors { get; }
 
         /// <summary>

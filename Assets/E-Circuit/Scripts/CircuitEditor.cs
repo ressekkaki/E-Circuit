@@ -6,7 +6,6 @@ using ECircuit.Simulation.Components;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
-using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 namespace ECircuit
 {
