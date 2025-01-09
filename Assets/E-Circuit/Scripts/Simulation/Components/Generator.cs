@@ -38,7 +38,7 @@ namespace ECircuit.Simulation.Components
         {
             var pos = m_Positive.ConnectionName;
             var neg = m_Negative.ConnectionName;
-            Debug.Log($"Building Generator: Name={ComponentName}, Positive={m_Positive.ConnectionName}, Negative={m_Negative.Connection.ConnectionName}, Voltage={m_Voltage}V");
+            Debug.Log($"Building Generator: Name={ComponentName}, Positive={pos}, Negative={neg}, Voltage={m_Voltage}V");
             return new VoltageSource(ComponentName, pos, neg, m_Voltage);
         }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using ECircuit.Simulation;
 using System.Collections.Generic;
+using TMPro;
 
 namespace ECircuit
 {
@@ -13,13 +14,29 @@ namespace ECircuit
     {
         [SerializeField]
         private Material m_WireMaterial;
+        [SerializeField]
+        private GameObject m_VoltageIndicatorPrefab;
+        [SerializeField]
+        [Tooltip("The simulator to use, leave empty to use the default one")]
+        private Simulator m_simulator;
 
         private readonly Dictionary<Connector, LineRenderer> m_Wires = new();
         private Connection m_Connection;
+        private TextMeshPro m_VoltageText;
 
         public void Awake()
         {
             m_Connection = GetComponent<Connection>();
+            if (m_simulator == null)
+            {
+                m_simulator = FindFirstObjectByType<Simulator>();
+            }
+            // check if the prefab has a TextMeshPro component
+            if (m_VoltageIndicatorPrefab != null && m_VoltageIndicatorPrefab.GetComponent<TextMeshPro>() == null)
+            {
+                Debug.LogWarning("Voltage indicator prefab does not have a TextMeshPro component, voltage will not be displayed");
+                m_VoltageIndicatorPrefab = null;
+            }
         }
 
         public void OnDisable()
@@ -35,10 +52,18 @@ namespace ECircuit
 
         public void Update()
         {
-            if (m_Connection == null || m_Connection.ConnectedTo == null)
+            if (m_Connection != null && m_Connection.ConnectedTo != null)
             {
-                return;
+                RenderWire();
             }
+            if (m_simulator != null && m_VoltageIndicatorPrefab != null && m_simulator.DidSimulate)
+            {
+                RenderVoltage();
+            }
+        }
+
+        private void RenderWire()
+        {
             LineRenderer[] childLines = GetComponentsInChildren<LineRenderer>();
 
             if (childLines.Length != m_Connection.ConnectedTo.Count)
@@ -65,6 +90,27 @@ namespace ECircuit
 
                 wire.SetPositions(new Vector3[] { transform.position, c.transform.position });
             }
+        }
+
+        private void RenderVoltage()
+        {
+            if (m_simulator == null || !m_simulator.DidSimulate)
+            {
+                if (m_VoltageText != null)
+                {
+                    Destroy(m_VoltageText.gameObject);
+                    m_VoltageText = null;
+                }
+                return;
+            }
+            if (m_VoltageText == null)
+            {
+                m_VoltageText = Instantiate(m_VoltageIndicatorPrefab, transform.position, Quaternion.identity).GetComponent<TextMeshPro>();
+                m_VoltageText.transform.SetParent(transform);
+                m_VoltageText.transform.localScale = Vector3.one;
+            }
+            // format voltage to 2 decimal places
+            m_VoltageText.text = $"{m_Connection.CurrentVoltage:G3}V";
         }
     }
 }
