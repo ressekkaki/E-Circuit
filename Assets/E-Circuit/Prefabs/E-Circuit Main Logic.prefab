@@ -70,6 +70,8 @@ MonoBehaviour:
     type: 3}
   m_generatorPrefab: {fileID: 2112088876172135187, guid: 7cab8f5fc1d44d0c8a701efd38859730,
     type: 3}
+  m_ledPrefab: {fileID: 2112088876172135187, guid: 8fcd76c7d2ef62950b1aa0adb9a4e7b7,
+    type: 3}
   m_resistorPrefab: {fileID: 4993713481665065601, guid: a91612f9e9df114dbb654f0c83f1b0eb,
     type: 3}
   m_selectedConnector: {fileID: 0}

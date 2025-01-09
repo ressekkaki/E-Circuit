@@ -1,32 +1,32 @@
+using System;
 using ECircuit.Simulation;
-using ECircuit.Simulation.Components;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace ECircuit.Rendering
 {
-    public class ComponentCurrentRenderer : MonoBehaviour
+    [RequireComponent(typeof(Led))]
+    public class LedRenderer : MonoBehaviour
     {
         [SerializeField]
-        private BaseComponent m_Component;
-        [SerializeField]
-        private TextMeshPro m_Text;
+        private Renderer m_LightBar;
+
         [SerializeField]
         [Tooltip("The simulator to use, leave empty to use the default one")]
         private Simulator m_simulator;
 
+        private Led m_Led;
 
         public void Awake()
         {
+            m_Led = GetComponent<Led>();
             if (m_simulator == null)
             {
                 m_simulator = FindFirstObjectByType<Simulator>();
             }
-            Assert.IsNotNull(m_Text);
+            Assert.IsNotNull(m_LightBar);
         }
 
-        // Update is called once per frame
         public void Update()
         {
             if (m_simulator == null)
@@ -34,15 +34,16 @@ namespace ECircuit.Rendering
                 return;
             }
 
-            if (m_simulator.DidSimulate)
+            double current = m_Led.CurrentCurrent;
+            if (current < m_Led.MinCurrent || current > m_Led.MaxCurrent)
             {
-                m_Text.text = $"{m_Component.CurrentCurrent * 1000.0:G3} mA";
-                m_Text.color = m_Component.IsOverloaded() ? Color.red : Color.white;
-                m_Text.enabled = true;
+                m_LightBar.material.color = Color.black;
             }
             else
             {
-                m_Text.enabled = false;
+                double intensity = Math.Clamp(current / m_Led.MaxCurrent, 0.0, 1.0);
+                Color.RGBToHSV(m_Led.Color, out float h, out float s, out _);
+                m_LightBar.material.color = Color.HSVToRGB(h, s, (float)intensity);
             }
         }
     }

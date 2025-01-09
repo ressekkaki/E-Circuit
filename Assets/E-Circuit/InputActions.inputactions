@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Spawn LED",
+                    "type": "Button",
+                    "id": "cac8d5b6-9c39-493b-a47d-a607fb1cf1cc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Spawn Resistor",
                     "type": "Button",
                     "id": "be3092c3-b7d7-4f52-ad78-d370d977187a",
@@ -161,6 +170,39 @@
                     "processors": "",
                     "groups": ";Keyboard And Mouse",
                     "action": "Spawn Diode",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Alt+L",
+                    "id": "edba96b8-f39e-4c61-82d2-ee7f04baa1eb",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spawn LED",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "c3b737d7-b953-46b2-b864-5f9c0f88899f",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Spawn LED",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "c2f20647-87e4-4f67-b421-a6841ff67496",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Spawn LED",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
