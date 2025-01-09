@@ -3,7 +3,7 @@ using ECircuit.Simulation;
 using System.Collections.Generic;
 using TMPro;
 
-namespace ECircuit
+namespace ECircuit.Rendering
 {
     /// <summary>
     /// Renders the connections between connectors as straight lines.
