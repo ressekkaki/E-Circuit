@@ -63,5 +63,15 @@ namespace ECircuit.Simulation
             }
             m_WasPressed = m_Pressed;
         }
+
+        public void OnPress()
+        {
+            m_Pressed = true;
+        }
+
+        public void OnRelease()
+        {
+            m_Pressed = false;
+        }
     }
 }

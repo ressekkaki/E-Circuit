@@ -105,12 +105,22 @@ namespace ECircuit
 
         private void OnInteractActionStarted(InputAction.CallbackContext context)
         {
+            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnPress != null)
+            {
+                clickHandler.OnPress.Invoke();
+                return;
+            }
             m_HoldInteractCoroutine ??= StartCoroutine(OnInteractActionHeld());
         }
 
 
         private void OnInteractActionCanceled(InputAction.CallbackContext context)
         {
+            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnRelease != null)
+            {
+                clickHandler.OnRelease.Invoke();
+                return;
+            }
             if (m_HoldInteractCoroutine != null)
             {
                 StopCoroutine(m_HoldInteractCoroutine);
@@ -127,6 +137,11 @@ namespace ECircuit
         {
             if (!context.performed)
             {
+                return;
+            }
+            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnClick != null)
+            {
+                clickHandler.OnClick.Invoke();
                 return;
             }
             if (RaycastComponent(out Connector connector))
