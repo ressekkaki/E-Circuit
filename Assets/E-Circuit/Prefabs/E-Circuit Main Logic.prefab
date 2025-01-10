@@ -59,21 +59,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03240cff9b21140689c268f714a4d234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_camera: {fileID: 0}
-  m_simulator: {fileID: 4465579212587858078}
-  m_connectionPrefab: {fileID: 2223061091869966609, guid: 94ea22888f33ab2dfb2a9f119e029ab4,
+  m_Camera: {fileID: 0}
+  m_Simulator: {fileID: 4465579212587858078}
+  m_ConnectionPrefab: {fileID: 2223061091869966609, guid: 94ea22888f33ab2dfb2a9f119e029ab4,
     type: 3}
-  m_inputActions: {fileID: -944628639613478452, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+  m_InteractAction: {fileID: -532197728664673773, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_SpawnDiodeAction: {fileID: -5629614718900613665, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_SpawnGeneratorAction: {fileID: -7336633147258521023, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_SpawnLedAction: {fileID: -1797590511250423393, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_SpawnPushButtonAction: {fileID: 3743881718127355671, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_SpawnResistorAction: {fileID: 316028044509827449, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
+  m_InputActions: {fileID: -944628639613478452, guid: be82be06ca56ab296bf5a8ce6f70c1be,
     type: 3}
   m_ComponentDeleteDelaySeconds: 0.4
-  m_diodePrefab: {fileID: 2112088876172135187, guid: ad6745bd8e63d4c84a4d548dc4b9feb1,
+  m_DiodePrefab: {fileID: 2112088876172135187, guid: ad6745bd8e63d4c84a4d548dc4b9feb1,
     type: 3}
-  m_generatorPrefab: {fileID: 2112088876172135187, guid: 7cab8f5fc1d44d0c8a701efd38859730,
+  m_GeneratorPrefab: {fileID: 2112088876172135187, guid: 7cab8f5fc1d44d0c8a701efd38859730,
     type: 3}
-  m_ledPrefab: {fileID: 2112088876172135187, guid: 8fcd76c7d2ef62950b1aa0adb9a4e7b7,
+  m_LedPrefab: {fileID: 2112088876172135187, guid: 8fcd76c7d2ef62950b1aa0adb9a4e7b7,
     type: 3}
-  m_pushButtonPrefab: {fileID: 2112088876172135187, guid: 3e82b9257416483d78c8609ab8bc49e5,
+  m_PushButtonPrefab: {fileID: 2112088876172135187, guid: 3e82b9257416483d78c8609ab8bc49e5,
     type: 3}
-  m_resistorPrefab: {fileID: 4993713481665065601, guid: a91612f9e9df114dbb654f0c83f1b0eb,
+  m_ResistorPrefab: {fileID: 4993713481665065601, guid: a91612f9e9df114dbb654f0c83f1b0eb,
     type: 3}
-  m_selectedConnector: {fileID: 0}
+  m_SelectedConnector: {fileID: 0}
+  m_IDontKnow: {fileID: 0}
