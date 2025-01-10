@@ -13,45 +13,54 @@ namespace ECircuit
     {
         [SerializeField]
         [Tooltip("The camera to use, leave empty to use the default one")]
-        private Camera m_camera;
+        private Camera m_Camera;
         [SerializeField]
         [Tooltip("The simulator to use, leave empty to use the default one")]
-        private Simulator m_simulator;
+        private Simulator m_Simulator;
         [SerializeField]
         [Tooltip("The prefab to use for connections, cannot be null")]
-        private GameObject m_connectionPrefab;
+        private GameObject m_ConnectionPrefab;
 
         [Header("Controls")]
         [SerializeField]
-        [Tooltip("The input actions asset, leave empty to use the default one")]
-        private InputActionAsset m_inputActions;
+        private InputActionReference m_InteractAction;
+        [SerializeField]
+        private InputActionReference m_SpawnDiodeAction;
+        [SerializeField]
+        private InputActionReference m_SpawnGeneratorAction;
+        [SerializeField]
+        private InputActionReference m_SpawnLedAction;
+        [SerializeField]
+        private InputActionReference m_SpawnPushButtonAction;
+        [SerializeField]
+        private InputActionReference m_SpawnResistorAction;
         [SerializeField]
         private float m_ComponentDeleteDelaySeconds = 0.4f;
 
         [Header("Component Prefabs")]
         [SerializeField]
         [Tooltip("The prefab to use for diodes")]
-        private GameObject m_diodePrefab;
+        private GameObject m_DiodePrefab;
         [SerializeField]
         [Tooltip("The prefab to use for generators")]
-        private GameObject m_generatorPrefab;
+        private GameObject m_GeneratorPrefab;
         [SerializeField]
         [Tooltip("The prefab to use for LEDs")]
-        private GameObject m_ledPrefab;
+        private GameObject m_LedPrefab;
         [SerializeField]
         [Tooltip("The prefab to use for push buttons")]
-        private GameObject m_pushButtonPrefab;
+        private GameObject m_PushButtonPrefab;
         [SerializeField]
         [Tooltip("The prefab to use for resistors")]
-        private GameObject m_resistorPrefab;
+        private GameObject m_ResistorPrefab;
 
 
         [Header("Runtime Values, DO NOT CHANGE IN EDITOR")]
         [SerializeField]
         [Tooltip("The currently selected connector")]
-        private Connector m_selectedConnector;
+        private Connector m_SelectedConnector;
         [Tooltip("The initial color of the selected connector")]
-        private Color m_selectedConnectorInitialColor;
+        private Color m_SelectedConnectorInitialColor;
 
         private Coroutine m_HoldInteractCoroutine;
 
@@ -59,12 +68,12 @@ namespace ECircuit
 
         private void Awake()
         {
-            Assert.IsNotNull(m_connectionPrefab, "Connection prefab cannot be null");
-            if (m_camera == null)
+            Assert.IsNotNull(m_ConnectionPrefab, "Connection prefab cannot be null");
+            if (m_Camera == null)
             {
-                m_camera = Camera.main;
+                m_Camera = Camera.main;
             }
-            InputAction interactAction = m_inputActions.FindActionMap("Player").FindAction("Interact", throwIfNotFound: true);
+            InputAction interactAction = m_InteractAction.action;
             interactAction.started += OnInteractActionStarted;
             interactAction.canceled += OnInteractActionCanceled;
             interactAction.performed += OnInteractActionPerformed;
@@ -74,14 +83,14 @@ namespace ECircuit
                 interactAction.canceled -= OnInteractActionCanceled;
                 interactAction.performed -= OnInteractActionPerformed;
             });
-            AddSpawnComponentAction<Diode>("Spawn Diode", m_diodePrefab);
-            AddSpawnComponentAction<Generator>("Spawn Generator", m_generatorPrefab);
-            AddSpawnComponentAction<Led>("Spawn LED", m_ledPrefab);
-            AddSpawnComponentAction<PushButton>("Spawn Push Button", m_pushButtonPrefab);
-            AddSpawnComponentAction<Resistor>("Spawn Resistor", m_resistorPrefab);
-            if (m_simulator == null)
+            AddSpawnComponentAction<Diode>(m_SpawnDiodeAction, m_DiodePrefab);
+            AddSpawnComponentAction<Generator>(m_SpawnGeneratorAction, m_GeneratorPrefab);
+            AddSpawnComponentAction<Led>(m_SpawnLedAction, m_LedPrefab);
+            AddSpawnComponentAction<PushButton>(m_SpawnPushButtonAction, m_PushButtonPrefab);
+            AddSpawnComponentAction<Resistor>(m_SpawnResistorAction, m_ResistorPrefab);
+            if (m_Simulator == null)
             {
-                m_simulator = FindFirstObjectByType<Simulator>();
+                m_Simulator = FindFirstObjectByType<Simulator>();
             }
         }
 
@@ -159,12 +168,12 @@ namespace ECircuit
             BaseComponent component = obj.GetComponent<T>();
             component.name = component.RandomName();
             component.ComponentName = component.name;
-            m_simulator.NeedSimulation = true;
+            m_Simulator.NeedSimulation = true;
         }
 
-        private void AddSpawnComponentAction<T>(string actionName, GameObject prefab) where T : BaseComponent
+        private void AddSpawnComponentAction<T>(InputActionReference actionRef, GameObject prefab) where T : BaseComponent
         {
-            InputAction action = m_inputActions.FindActionMap("Player").FindAction(actionName);
+            InputAction action = actionRef.action;
             if (action != null)
             {
                 void onPerform(InputAction.CallbackContext context)
@@ -184,7 +193,7 @@ namespace ECircuit
         private bool RaycastComponent<T>(out T component, out RaycastHit hit)
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = m_camera.ScreenPointToRay(mousePosition);
+            Ray ray = m_Camera.ScreenPointToRay(mousePosition);
             if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent(out component))
             {
                 return true;
@@ -196,12 +205,12 @@ namespace ECircuit
 
         private void OnConnectorSelect(Connector connector)
         {
-            if (connector == m_selectedConnector)
+            if (connector == m_SelectedConnector)
             {
                 // treat select again as unselect
                 connector = null;
             }
-            var previousConnector = m_selectedConnector;
+            var previousConnector = m_SelectedConnector;
             UnselectConnector();
             if (connector == null || previousConnector == null)
             {
@@ -221,24 +230,24 @@ namespace ECircuit
         {
             Debug.Log($"Deleting component {component}");
             Destroy(component.gameObject);
-            m_simulator.NeedSimulation = true;
+            m_Simulator.NeedSimulation = true;
         }
 
         private void UnselectConnector()
         {
-            if (m_selectedConnector != null)
+            if (m_SelectedConnector != null)
             {
-                m_selectedConnector.GetComponent<Renderer>().material.color = m_selectedConnectorInitialColor;
-                m_selectedConnector = null;
+                m_SelectedConnector.GetComponent<Renderer>().material.color = m_SelectedConnectorInitialColor;
+                m_SelectedConnector = null;
             }
         }
 
         private void SelectConnector(Connector connector)
         {
-            m_selectedConnector = connector;
+            m_SelectedConnector = connector;
             if (connector != null)
             {
-                m_selectedConnectorInitialColor = connector.GetComponent<Renderer>().material.color;
+                m_SelectedConnectorInitialColor = connector.GetComponent<Renderer>().material.color;
                 connector.GetComponent<Renderer>().material.color = Color.red;
             }
         }
@@ -256,7 +265,7 @@ namespace ECircuit
             to.Connection = null;
             Connection.DestroyIfInvalid(connFrom);
             Connection.DestroyIfInvalid(connTo);
-            m_simulator.NeedSimulation = true;
+            m_Simulator.NeedSimulation = true;
         }
 
         private void Connect(Connector from, Connector to)
@@ -273,7 +282,7 @@ namespace ECircuit
             {
                 // Instantiate a middle pos between the two connectors
                 var pos = (from.transform.position + to.transform.position) / 2;
-                GameObject obj = Instantiate(m_connectionPrefab, pos, Quaternion.identity);
+                GameObject obj = Instantiate(m_ConnectionPrefab, pos, Quaternion.identity);
                 obj.name = Connection.RandomName();
                 obj.transform.parent = from.transform.parent.parent;
                 connFrom = obj.GetComponent<Connection>();
@@ -289,12 +298,12 @@ namespace ECircuit
             }
 
             Connection.DestroyIfInvalid(connTo);
-            m_simulator.NeedSimulation = true;
+            m_Simulator.NeedSimulation = true;
         }
 
         private bool IsGroundConnection(Connection connection)
         {
-            Generator generator = m_simulator.MainGenerator;
+            Generator generator = m_Simulator.MainGenerator;
             if (connection == null || generator == null || generator.Negative == null)
             {
                 return false;
