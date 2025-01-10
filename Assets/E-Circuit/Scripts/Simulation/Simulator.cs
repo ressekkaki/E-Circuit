@@ -151,14 +151,9 @@ namespace ECircuit.Simulation
                 Debug.LogError("Main generator is not set, cannot simulate");
                 return;
             }
-            var pushButtonModel = new VoltageSwitchModel("PushButtonModel");
-            pushButtonModel.SetParameter("vt", 1.0);
-            pushButtonModel.SetParameter("roff", 1000000.0);
-            pushButtonModel.SetParameter("ron", 0.0);
             var scCircuit = new SpiceSharp.Circuit(circuit.Components.SelectMany(c => c.BuildEntity()))
             {
                 new DiodeModel("DiodeModel"),
-                pushButtonModel
             };
             var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { 5.0 }) });
 

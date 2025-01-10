@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4106006290265130672}
   - component: {fileID: 1704453658847421305}
   - component: {fileID: 1484129274816240595}
-  - component: {fileID: 9140396273843273138}
+  - component: {fileID: 6120934239069580998}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ConnectedTo: []
   m_CurrentVoltage: 0
---- !u!114 &9140396273843273138
+--- !u!114 &6120934239069580998
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,4 +117,5 @@ MonoBehaviour:
   m_WireMaterial: {fileID: 2100000, guid: 08770a86ed5f80151a4e09596f69d857, type: 2}
   m_VoltageIndicatorPrefab: {fileID: 7816406518339407383, guid: 150a6c51a55126e3bbebf966596d147a,
     type: 3}
+  m_minThreshold: 0.00001
   m_simulator: {fileID: 0}
