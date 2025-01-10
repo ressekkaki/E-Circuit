@@ -5,8 +5,6 @@ using System.Linq;
 using SpiceSharp.Simulations;
 using SpiceSharp.Validation;
 using SpiceSharp.Components;
-using UnityEngine.XR.Interaction.Toolkit.Inputs;
-using SpiceSharp.Entities;
 using System;
 
 namespace ECircuit.Simulation

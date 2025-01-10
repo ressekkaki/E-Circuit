@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 4565572415090600110}
   - component: {fileID: 6171046858680434803}
   - component: {fileID: 4732521427956699881}
+  - component: {fileID: 8768293818702360169}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -531,3 +532,48 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: -3.5527137e-15, y: -0.96, z: -0.00000008940695}
+--- !u!114 &8768293818702360169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5554225138592304799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1daddaf3376774d69e98eab49883302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnPress:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2023122691890638074}
+        m_TargetAssemblyTypeName: ECircuit.Simulation.PushButton, Assembly-CSharp
+        m_MethodName: OnPress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_OnRelease:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2023122691890638074}
+        m_TargetAssemblyTypeName: ECircuit.Simulation.PushButton, Assembly-CSharp
+        m_MethodName: OnRelease
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
