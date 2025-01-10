@@ -2,7 +2,6 @@ using UnityEngine;
 using ECircuit.Simulation;
 using System.Collections.Generic;
 using TMPro;
-using System;
 
 namespace ECircuit.Rendering
 {
