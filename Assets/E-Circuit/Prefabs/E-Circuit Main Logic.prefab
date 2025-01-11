@@ -63,6 +63,8 @@ MonoBehaviour:
   m_Simulator: {fileID: 4465579212587858078}
   m_ConnectionPrefab: {fileID: 2223061091869966609, guid: 94ea22888f33ab2dfb2a9f119e029ab4,
     type: 3}
+  m_TouchPositionAction: {fileID: 8542688867547423826, guid: be82be06ca56ab296bf5a8ce6f70c1be,
+    type: 3}
   m_InteractAction: {fileID: -532197728664673773, guid: be82be06ca56ab296bf5a8ce6f70c1be,
     type: 3}
   m_SpawnDiodeAction: {fileID: -5629614718900613665, guid: be82be06ca56ab296bf5a8ce6f70c1be,
@@ -74,8 +76,6 @@ MonoBehaviour:
   m_SpawnPushButtonAction: {fileID: 3743881718127355671, guid: be82be06ca56ab296bf5a8ce6f70c1be,
     type: 3}
   m_SpawnResistorAction: {fileID: 316028044509827449, guid: be82be06ca56ab296bf5a8ce6f70c1be,
-    type: 3}
-  m_InputActions: {fileID: -944628639613478452, guid: be82be06ca56ab296bf5a8ce6f70c1be,
     type: 3}
   m_ComponentDeleteDelaySeconds: 0.4
   m_DiodePrefab: {fileID: 2112088876172135187, guid: ad6745bd8e63d4c84a4d548dc4b9feb1,
@@ -89,4 +89,3 @@ MonoBehaviour:
   m_ResistorPrefab: {fileID: 4993713481665065601, guid: a91612f9e9df114dbb654f0c83f1b0eb,
     type: 3}
   m_SelectedConnector: {fileID: 0}
-  m_IDontKnow: {fileID: 0}
