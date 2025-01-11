@@ -23,6 +23,9 @@ namespace ECircuit
 
         [Header("Controls")]
         [SerializeField]
+        private InputActionReference m_TouchPositionAction;
+        //
+        [SerializeField]
         private InputActionReference m_InteractAction;
         [SerializeField]
         private InputActionReference m_SpawnDiodeAction;
@@ -105,7 +108,8 @@ namespace ECircuit
 
         private void OnInteractActionStarted(InputAction.CallbackContext context)
         {
-            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnPress != null)
+            Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnPress != null)
             {
                 clickHandler.OnPress.Invoke();
                 return;
@@ -116,7 +120,8 @@ namespace ECircuit
 
         private void OnInteractActionCanceled(InputAction.CallbackContext context)
         {
-            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnRelease != null)
+            Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnRelease != null)
             {
                 clickHandler.OnRelease.Invoke();
                 return;
@@ -139,12 +144,13 @@ namespace ECircuit
             {
                 return;
             }
-            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnClick != null)
+            Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnClick != null)
             {
                 clickHandler.OnClick.Invoke();
                 return;
             }
-            if (RaycastComponent(out Connector connector))
+            if (RaycastComponent(pos, out Connector connector))
             {
                 OnConnectorSelect(connector);
                 return;
@@ -158,22 +164,24 @@ namespace ECircuit
         /// </summary>
         private IEnumerator OnInteractActionHeld()
         {
-            if (!RaycastComponent(out BaseComponent componentStart))
+            Vector2 startPos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (!RaycastComponent(startPos, out BaseComponent componentStart))
             {
                 yield break;
             }
             yield return new WaitForSeconds(m_ComponentDeleteDelaySeconds);
             // Check that the component is still the same after the delay
-            if (RaycastComponent(out BaseComponent componentEnd) && componentStart == componentEnd)
+            Vector2 endPos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (RaycastComponent(endPos, out BaseComponent componentEnd) && componentStart == componentEnd)
             {
                 // Hold "interact" to delete the component
                 OnComponentDelete(componentStart);
             }
         }
 
-        private void OnSpawnComponentActionPerformed<T>(GameObject prefab) where T : BaseComponent
+        private void OnSpawnComponentActionPerformed<T>(Vector2 pos, GameObject prefab) where T : BaseComponent
         {
-            if (!RaycastComponent(out CircuitSurfaceMarker marker, out RaycastHit hit))
+            if (!RaycastComponent(pos, out CircuitSurfaceMarker marker, out RaycastHit hit))
             {
                 return;
             }
@@ -193,22 +201,23 @@ namespace ECircuit
             {
                 void onPerform(InputAction.CallbackContext context)
                 {
-                    OnSpawnComponentActionPerformed<T>(prefab);
+                    Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+                    OnSpawnComponentActionPerformed<T>(pos, prefab);
                 }
                 action.performed += onPerform;
                 m_CleanupActions.Add(() => action.performed -= onPerform);
             }
         }
 
-        private bool RaycastComponent<T>(out T component)
+        private bool RaycastComponent<T>(Vector2 pos, out T component)
         {
-            return RaycastComponent(out component, out _);
+            return RaycastComponent(pos, out component, out _);
         }
 
-        private bool RaycastComponent<T>(out T component, out RaycastHit hit)
+        private bool RaycastComponent<T>(Vector2 pos, out T component, out RaycastHit hit)
         {
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = m_Camera.ScreenPointToRay(mousePosition);
+            // Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Ray ray = m_Camera.ScreenPointToRay(pos);
             if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent(out component))
             {
                 return true;

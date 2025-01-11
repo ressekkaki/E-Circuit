@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Touch Position",
+                    "type": "Value",
+                    "id": "800ec6b6-16af-4765-abc1-dd7634cbd9c3",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -247,6 +256,28 @@
                     "action": "Spawn Push Button",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "1f736797-0e74-4e63-8bd6-95383e5bbc6d",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard And Mouse",
+                    "action": "Touch Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b336c799-4203-4787-a16a-f44f98328adf",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";AR",
+                    "action": "Touch Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
