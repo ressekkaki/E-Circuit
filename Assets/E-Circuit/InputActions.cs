@@ -80,6 +80,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Touch Position"",
+                    ""type"": ""Value"",
+                    ""id"": ""800ec6b6-16af-4765-abc1-dd7634cbd9c3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -269,6 +278,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Spawn Push Button"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f736797-0e74-4e63-8bd6-95383e5bbc6d"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard And Mouse"",
+                    ""action"": ""Touch Position"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b336c799-4203-4787-a16a-f44f98328adf"",
+                    ""path"": ""<Touchscreen>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";AR"",
+                    ""action"": ""Touch Position"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -311,6 +342,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_SpawnLED = m_Player.FindAction("Spawn LED", throwIfNotFound: true);
         m_Player_SpawnPushButton = m_Player.FindAction("Spawn Push Button", throwIfNotFound: true);
         m_Player_SpawnResistor = m_Player.FindAction("Spawn Resistor", throwIfNotFound: true);
+        m_Player_TouchPosition = m_Player.FindAction("Touch Position", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -383,6 +415,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SpawnLED;
     private readonly InputAction m_Player_SpawnPushButton;
     private readonly InputAction m_Player_SpawnResistor;
+    private readonly InputAction m_Player_TouchPosition;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -393,6 +426,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @SpawnLED => m_Wrapper.m_Player_SpawnLED;
         public InputAction @SpawnPushButton => m_Wrapper.m_Player_SpawnPushButton;
         public InputAction @SpawnResistor => m_Wrapper.m_Player_SpawnResistor;
+        public InputAction @TouchPosition => m_Wrapper.m_Player_TouchPosition;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -420,6 +454,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @SpawnResistor.started += instance.OnSpawnResistor;
             @SpawnResistor.performed += instance.OnSpawnResistor;
             @SpawnResistor.canceled += instance.OnSpawnResistor;
+            @TouchPosition.started += instance.OnTouchPosition;
+            @TouchPosition.performed += instance.OnTouchPosition;
+            @TouchPosition.canceled += instance.OnTouchPosition;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -442,6 +479,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @SpawnResistor.started -= instance.OnSpawnResistor;
             @SpawnResistor.performed -= instance.OnSpawnResistor;
             @SpawnResistor.canceled -= instance.OnSpawnResistor;
+            @TouchPosition.started -= instance.OnTouchPosition;
+            @TouchPosition.performed -= instance.OnTouchPosition;
+            @TouchPosition.canceled -= instance.OnTouchPosition;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -485,5 +525,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnSpawnLED(InputAction.CallbackContext context);
         void OnSpawnPushButton(InputAction.CallbackContext context);
         void OnSpawnResistor(InputAction.CallbackContext context);
+        void OnTouchPosition(InputAction.CallbackContext context);
     }
 }

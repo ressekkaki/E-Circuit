@@ -5,6 +5,7 @@ using ECircuit.Simulation;
 using ECircuit.Simulation.Components;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace ECircuit
@@ -20,8 +21,17 @@ namespace ECircuit
         [SerializeField]
         [Tooltip("The prefab to use for connections, cannot be null")]
         private GameObject m_ConnectionPrefab;
+        [SerializeField]
+        [Tooltip("The circuit mode")]
+        private CircuitMode m_CircuitMode = CircuitMode.Edit;
+        [SerializeField]
+        [Tooltip("The current edit action")]
+        private EditAction m_EditAction = EditAction.Selection;
 
         [Header("Controls")]
+        [SerializeField]
+        private InputActionReference m_TouchPositionAction;
+        //
         [SerializeField]
         private InputActionReference m_InteractAction;
         [SerializeField]
@@ -66,6 +76,9 @@ namespace ECircuit
 
         private readonly List<Action> m_CleanupActions = new();
 
+        public CircuitMode CircuitMode { get => m_CircuitMode; set => m_CircuitMode = value; }
+        public EditAction EditAction { get => m_EditAction; set => m_EditAction = value; }
+
         private void Awake()
         {
             Assert.IsNotNull(m_ConnectionPrefab, "Connection prefab cannot be null");
@@ -105,26 +118,49 @@ namespace ECircuit
 
         private void OnInteractActionStarted(InputAction.CallbackContext context)
         {
-            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnPress != null)
+            // Do not interact with UI elements
+            if (EventSystem.current.IsPointerOverGameObject())
             {
-                clickHandler.OnPress.Invoke();
                 return;
             }
-            m_HoldInteractCoroutine ??= StartCoroutine(OnInteractActionHeld());
+            Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (m_CircuitMode == CircuitMode.Simulation)
+            {
+                if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnPress != null)
+                {
+                    clickHandler.OnPress.Invoke();
+                }
+            }
+            else
+            {
+                m_HoldInteractCoroutine ??= StartCoroutine(OnInteractActionHeld());
+            }
         }
 
 
         private void OnInteractActionCanceled(InputAction.CallbackContext context)
         {
-            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnRelease != null)
+            // Do not interact with UI elements
+            if (EventSystem.current.IsPointerOverGameObject())
             {
-                clickHandler.OnRelease.Invoke();
                 return;
             }
-            if (m_HoldInteractCoroutine != null)
+            Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+
+            if (m_CircuitMode == CircuitMode.Simulation)
             {
-                StopCoroutine(m_HoldInteractCoroutine);
-                m_HoldInteractCoroutine = null;
+                if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnRelease != null)
+                {
+                    clickHandler.OnRelease.Invoke();
+                }
+            }
+            else
+            {
+                if (m_HoldInteractCoroutine != null)
+                {
+                    StopCoroutine(m_HoldInteractCoroutine);
+                    m_HoldInteractCoroutine = null;
+                }
             }
         }
 
@@ -135,21 +171,51 @@ namespace ECircuit
         /// </summary>
         private void OnInteractActionPerformed(InputAction.CallbackContext context)
         {
-            if (!context.performed)
+            // Do not interact with UI elements
+            if (!context.performed || EventSystem.current.IsPointerOverGameObject())
             {
                 return;
             }
-            if (RaycastComponent(out ClickHandler clickHandler) && clickHandler.OnClick != null)
+
+            Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+
+            if (m_CircuitMode == CircuitMode.Simulation)
             {
-                clickHandler.OnClick.Invoke();
+                if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnClick != null)
+                {
+                    clickHandler.OnClick.Invoke();
+                }
                 return;
             }
-            if (RaycastComponent(out Connector connector))
+
+            switch (m_EditAction)
             {
-                OnConnectorSelect(connector);
-                return;
+                case EditAction.Selection:
+                    if (RaycastComponent(pos, out Connector connector))
+                    {
+                        OnConnectorSelect(connector);
+                    }
+                    else
+                    {
+                        OnConnectorSelect(null);
+                    }
+                    break;
+                case EditAction.SpawnDiode:
+                    OnSpawnComponentActionPerformed<Diode>(pos, m_DiodePrefab);
+                    break;
+                case EditAction.SpawnGenerator:
+                    OnSpawnComponentActionPerformed<Generator>(pos, m_GeneratorPrefab);
+                    break;
+                case EditAction.SpawnLed:
+                    OnSpawnComponentActionPerformed<Led>(pos, m_LedPrefab);
+                    break;
+                case EditAction.SpawnPushButton:
+                    OnSpawnComponentActionPerformed<PushButton>(pos, m_PushButtonPrefab);
+                    break;
+                case EditAction.SpawnResistor:
+                    OnSpawnComponentActionPerformed<Resistor>(pos, m_ResistorPrefab);
+                    break;
             }
-            OnConnectorSelect(null);
         }
 
         /// <summary>
@@ -158,22 +224,24 @@ namespace ECircuit
         /// </summary>
         private IEnumerator OnInteractActionHeld()
         {
-            if (!RaycastComponent(out BaseComponent componentStart))
+            Vector2 startPos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (!RaycastComponent(startPos, out BaseComponent componentStart))
             {
                 yield break;
             }
             yield return new WaitForSeconds(m_ComponentDeleteDelaySeconds);
             // Check that the component is still the same after the delay
-            if (RaycastComponent(out BaseComponent componentEnd) && componentStart == componentEnd)
+            Vector2 endPos = m_TouchPositionAction.action.ReadValue<Vector2>();
+            if (RaycastComponent(endPos, out BaseComponent componentEnd) && componentStart == componentEnd)
             {
                 // Hold "interact" to delete the component
                 OnComponentDelete(componentStart);
             }
         }
 
-        private void OnSpawnComponentActionPerformed<T>(GameObject prefab) where T : BaseComponent
+        private void OnSpawnComponentActionPerformed<T>(Vector2 pos, GameObject prefab) where T : BaseComponent
         {
-            if (!RaycastComponent(out CircuitSurfaceMarker marker, out RaycastHit hit))
+            if (!RaycastComponent(pos, out CircuitSurfaceMarker marker, out RaycastHit hit))
             {
                 return;
             }
@@ -183,6 +251,7 @@ namespace ECircuit
             BaseComponent component = obj.GetComponent<T>();
             component.name = component.RandomName();
             component.ComponentName = component.name;
+            m_Simulator.CircuitRoot = marker.gameObject;
             m_Simulator.NeedSimulation = true;
         }
 
@@ -193,22 +262,22 @@ namespace ECircuit
             {
                 void onPerform(InputAction.CallbackContext context)
                 {
-                    OnSpawnComponentActionPerformed<T>(prefab);
+                    Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
+                    OnSpawnComponentActionPerformed<T>(pos, prefab);
                 }
                 action.performed += onPerform;
                 m_CleanupActions.Add(() => action.performed -= onPerform);
             }
         }
 
-        private bool RaycastComponent<T>(out T component)
+        private bool RaycastComponent<T>(Vector2 pos, out T component)
         {
-            return RaycastComponent(out component, out _);
+            return RaycastComponent(pos, out component, out _);
         }
 
-        private bool RaycastComponent<T>(out T component, out RaycastHit hit)
+        private bool RaycastComponent<T>(Vector2 pos, out T component, out RaycastHit hit)
         {
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = m_Camera.ScreenPointToRay(mousePosition);
+            Ray ray = m_Camera.ScreenPointToRay(pos);
             if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent(out component))
             {
                 return true;
@@ -306,24 +375,27 @@ namespace ECircuit
             from.Connection = connFrom;
             to.Connection = connFrom;
 
-            // Special case: the ground connection should always be called "0"
-            if (IsGroundConnection(connFrom) && connFrom.name != "0")
-            {
-                connFrom.name = "0";
-            }
-
             Connection.DestroyIfInvalid(connTo);
             m_Simulator.NeedSimulation = true;
         }
-
-        private bool IsGroundConnection(Connection connection)
-        {
-            Generator generator = m_Simulator.MainGenerator;
-            if (connection == null || generator == null || generator.Negative == null)
-            {
-                return false;
-            }
-            return connection.ConnectedTo.Contains(generator.Negative);
-        }
     }
+
+    public enum EditAction
+    {
+        Selection,
+        SpawnDiode,
+        SpawnGenerator,
+        SpawnLed,
+        SpawnPushButton,
+        SpawnResistor,
+    }
+
+
+    public enum CircuitMode
+    {
+        Edit,
+        Simulation
+    }
+
+
 }
