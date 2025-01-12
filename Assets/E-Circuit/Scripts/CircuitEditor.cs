@@ -148,14 +148,19 @@ namespace ECircuit
             if (RaycastComponent(pos, out ClickHandler clickHandler) && clickHandler.OnClick != null)
             {
                 clickHandler.OnClick.Invoke();
-                return;
             }
-            if (RaycastComponent(pos, out Connector connector))
+            else if (RaycastComponent(pos, out Connector connector))
             {
                 OnConnectorSelect(connector);
-                return;
             }
-            OnConnectorSelect(null);
+            else if (m_SelectedConnector != null)
+            {
+                OnConnectorSelect(null);
+            }
+            else
+            {
+                OnSpawnComponentActionPerformed<Resistor>(pos, m_ResistorPrefab);
+            }
         }
 
         /// <summary>
@@ -216,7 +221,6 @@ namespace ECircuit
 
         private bool RaycastComponent<T>(Vector2 pos, out T component, out RaycastHit hit)
         {
-            // Vector2 mousePosition = Mouse.current.position.ReadValue();
             Ray ray = m_Camera.ScreenPointToRay(pos);
             if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent(out component))
             {
