@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3123885502169282167}
   - component: {fileID: 4465579212587858078}
   - component: {fileID: 6426096553579079524}
+  - component: {fileID: 1381193306436387608}
   m_Layer: 0
   m_Name: E-Circuit Main Logic
   m_TagString: Untagged
@@ -89,3 +90,16 @@ MonoBehaviour:
   m_ResistorPrefab: {fileID: 4993713481665065601, guid: a91612f9e9df114dbb654f0c83f1b0eb,
     type: 3}
   m_SelectedConnector: {fileID: 0}
+--- !u!114 &1381193306436387608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003382427392287054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bda22b369ac6dcc3a7ba1fee0a52138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CircuitEditor: {fileID: 6426096553579079524}

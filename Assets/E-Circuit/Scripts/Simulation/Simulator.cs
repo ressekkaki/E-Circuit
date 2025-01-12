@@ -6,6 +6,7 @@ using SpiceSharp.Simulations;
 using SpiceSharp.Validation;
 using SpiceSharp.Components;
 using System;
+using JetBrains.Annotations;
 
 namespace ECircuit.Simulation
 {
@@ -20,6 +21,11 @@ namespace ECircuit.Simulation
 
         public Generator MainGenerator { get => m_MainGenerator; }
 
+        public GameObject CircuitRoot
+        {
+            get => m_CircuitRoot;
+            set { m_CircuitRoot = value; }
+        }
         public bool NeedSimulation { get; set; } = true;
         public bool DidSimulate { get; private set; } = false;
 
@@ -53,6 +59,7 @@ namespace ECircuit.Simulation
             var circuit = GatherCircuitComponents();
             Debug.Log($"Gathered circuit components, {circuit.Components.Count} components and {circuit.Connections.Count} connections");
             CheckCircuitNames(circuit);
+            RenameGroundConnection();
             Simulate(circuit);
         }
 
@@ -134,6 +141,21 @@ namespace ECircuit.Simulation
                     connection.ConnectionName = name;
                     connectionsByName.Add(name, connection);
                 }
+            }
+        }
+
+        private void RenameGroundConnection()
+        {
+            // // Special case: the ground connection should always be called "0"
+            if (m_MainGenerator == null)
+            {
+                return;
+            }
+            var groundConnection = m_MainGenerator.Negative.Connection;
+
+            if (groundConnection != null && groundConnection.ConnectionName != "0")
+            {
+                groundConnection.name = "0";
             }
         }
 
