@@ -7,6 +7,11 @@ namespace ECircuit.Simulation.Components
 {
     public abstract class BaseComponent : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject m_ComponentEditorPrefab = null;
+
+        public GameObject ComponentEditorPrefab { get => m_ComponentEditorPrefab; }
+
         public string ComponentName { get => name; set => name = value; }
 
         /// <summary>

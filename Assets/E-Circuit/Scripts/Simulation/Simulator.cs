@@ -175,7 +175,7 @@ namespace ECircuit.Simulation
             {
                 new DiodeModel("DiodeModel"),
             };
-            var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { 5.0 }) });
+            var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { m_MainGenerator.Voltage }) });
 
             // Export the current (in Amps) of each component
             Dictionary<BaseComponent, RealPropertyExport> currentExports = circuit.Components.ToDictionary(c => c, c => new RealPropertyExport(dc, c.ComponentName, "i"));

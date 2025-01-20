@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ECircuit.Simulation;
 using ECircuit.Simulation.Components;
+using ECircuit.UI;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
@@ -27,6 +28,9 @@ namespace ECircuit
         [SerializeField]
         [Tooltip("The current edit action")]
         private EditAction m_EditAction = EditAction.Selection;
+        [SerializeField]
+        [Tooltip("The root of the UI elements")]
+        private Transform m_UIRoot;
 
         [Header("Controls")]
         [SerializeField]
@@ -69,14 +73,31 @@ namespace ECircuit
         [SerializeField]
         [Tooltip("The currently selected connector")]
         private Connector m_SelectedConnector;
+        [SerializeField]
+        [Tooltip("The currently selected component")]
+        private BaseComponent m_SelectedComponent;
+        [SerializeField]
         [Tooltip("The initial color of the selected connector")]
         private Color m_SelectedConnectorInitialColor;
+        [SerializeField]
+        private ComponentEditor m_ActiveComponentEditor;
 
         private Coroutine m_HoldInteractCoroutine;
 
         private readonly List<Action> m_CleanupActions = new();
 
-        public CircuitMode CircuitMode { get => m_CircuitMode; set => m_CircuitMode = value; }
+        public CircuitMode CircuitMode
+        {
+            get => m_CircuitMode; set
+            {
+                m_CircuitMode = value;
+                if (value == CircuitMode.Simulation)
+                {
+                    OnConnectorSelect(null);
+                    DeselectComponent(m_ActiveComponentEditor);
+                }
+            }
+        }
         public EditAction EditAction { get => m_EditAction; set => m_EditAction = value; }
 
         private void Awake()
@@ -105,6 +126,16 @@ namespace ECircuit
             {
                 m_Simulator = FindFirstObjectByType<Simulator>();
             }
+            if (m_UIRoot == null)
+            {
+                m_UIRoot = transform;
+            }
+        }
+
+        private void Start()
+        {
+            OnConnectorSelect(null);
+            DeselectComponent(m_ActiveComponentEditor);
         }
 
         private void OnDestroy()
@@ -195,6 +226,10 @@ namespace ECircuit
                     {
                         OnConnectorSelect(connector);
                     }
+                    else if (RaycastComponent(pos, out BaseComponent component))
+                    {
+                        OnComponentSelect(component);
+                    }
                     else
                     {
                         OnConnectorSelect(null);
@@ -225,14 +260,14 @@ namespace ECircuit
         private IEnumerator OnInteractActionHeld()
         {
             Vector2 startPos = m_TouchPositionAction.action.ReadValue<Vector2>();
-            if (!RaycastComponent(startPos, out BaseComponent componentStart))
+            if (m_EditAction != EditAction.Selection || !RaycastComponent(startPos, out BaseComponent componentStart))
             {
                 yield break;
             }
             yield return new WaitForSeconds(m_ComponentDeleteDelaySeconds);
             // Check that the component is still the same after the delay
             Vector2 endPos = m_TouchPositionAction.action.ReadValue<Vector2>();
-            if (RaycastComponent(endPos, out BaseComponent componentEnd) && componentStart == componentEnd)
+            if (m_EditAction == EditAction.Selection && RaycastComponent(endPos, out BaseComponent componentEnd) && componentStart == componentEnd)
             {
                 // Hold "interact" to delete the component
                 OnComponentDelete(componentStart);
@@ -377,6 +412,41 @@ namespace ECircuit
 
             Connection.DestroyIfInvalid(connTo);
             m_Simulator.NeedSimulation = true;
+        }
+
+        private void OnComponentSelect(BaseComponent component)
+        {
+            if (component == null || component == m_SelectedComponent)
+            {
+                return;
+            }
+            DeselectComponent(m_ActiveComponentEditor);
+            m_SelectedComponent = component;
+            GameObject editorPrefab = component.ComponentEditorPrefab;
+            if (editorPrefab != null)
+            {
+                var editor = Instantiate(editorPrefab, m_UIRoot).GetComponent<ComponentEditor>();
+                editor.OnClose.AddListener(() => DeselectComponent(editor));
+                editor.Component = component;
+                m_ActiveComponentEditor = editor;
+            }
+        }
+
+        private void DeselectComponent(ComponentEditor editor)
+        {
+            if (editor == null)
+            {
+                return;
+            }
+            if (editor.Component == m_SelectedComponent)
+            {
+                m_SelectedComponent = null;
+            }
+            if (m_ActiveComponentEditor == editor)
+            {
+                m_ActiveComponentEditor = null;
+                Destroy(editor.gameObject);
+            }
         }
     }
 

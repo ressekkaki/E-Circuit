@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0db2729c90f869c397a52aefbd9df62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ComponentEditorPrefab: {fileID: 6285964114994663922, guid: cbf4d2422ab15fea9b165334f86f169f,
+    type: 3}
   m_Positive: {fileID: 2886199962105736081}
   m_Negative: {fileID: 5148578947738953699}
   m_Resistance: 100

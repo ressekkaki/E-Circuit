@@ -314,6 +314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 764cdab2d2b850e80b4f60574ec748da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ComponentEditorPrefab: {fileID: 5775399692582784338, guid: 107b68ad757dab1648b89a008692b7d3,
+    type: 3}
   m_Positive: {fileID: 1059733126507301153}
   m_Negative: {fileID: 6874935921800852771}
   m_Voltage: 5
