@@ -337,6 +337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf04a16fc135c618ab13949ee347873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ComponentEditorPrefab: {fileID: 6285964114994663922, guid: 4ace93e8aab4adecd80285269e94dc8c,
+    type: 3}
   m_Positive: {fileID: 8196932848157376977}
   m_Negative: {fileID: 7727913142936043459}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
