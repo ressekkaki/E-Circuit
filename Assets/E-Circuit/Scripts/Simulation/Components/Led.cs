@@ -27,7 +27,7 @@ namespace ECircuit.Simulation
         [Tooltip("The maximum current the LED can handle (before it burns out IRL)")]
         private double m_MaxCurrent = 0.03f;
 
-        public Color Color { get => m_Color; }
+        public Color Color { get => m_Color; set => m_Color = value; }
 
         public double MinCurrent { get => m_MinCurrent; }
 
