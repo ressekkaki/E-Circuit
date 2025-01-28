@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 1765345864834523765, guid: 9c43aefecf5e10db0a071bbb0ed8dca0,
         type: 3}
       propertyPath: m_text
-      value: Generator
+      value: Battery
       objectReference: {fileID: 0}
     - target: {fileID: 2732603978470010521, guid: 9c43aefecf5e10db0a071bbb0ed8dca0,
         type: 3}
