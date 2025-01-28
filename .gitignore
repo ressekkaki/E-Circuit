@@ -81,3 +81,7 @@ E-Circuit_BurstDebugInformation_DoNotShip/
 .vscode
 .idea
 
+# Annoying ever changing assets
+Assets/UnityXRContent/ARFoundation/SimulationEnvironments/Common/Materials/SimEnvironment_Accent.mat
+Assets/UnityXRContent/ARFoundation/SimulationEnvironments/Common/Materials/SimEnvironment_Carpet.mat
+Assets/UnityXRContent/ARFoundation/SimulationEnvironments/Common/Materials/SimEnvironment_Floor.mat

@@ -3461,6 +3461,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Edit Component Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 6792570459522261994, guid: 9c43aefecf5e10db0a071bbb0ed8dca0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7273228517581757552, guid: 9c43aefecf5e10db0a071bbb0ed8dca0,
         type: 3}
       propertyPath: m_AnchorMax.y

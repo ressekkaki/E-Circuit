@@ -13,59 +13,48 @@ namespace ECircuit
 {
     public class CircuitEditor : MonoBehaviour
     {
-        [SerializeField]
-        [Tooltip("The camera to use, leave empty to use the default one")]
+        [SerializeField] [Tooltip("The camera to use, leave empty to use the default one")]
         private Camera m_Camera;
-        [SerializeField]
-        [Tooltip("The simulator to use, leave empty to use the default one")]
+
+        [SerializeField] [Tooltip("The simulator to use, leave empty to use the default one")]
         private Simulator m_Simulator;
-        [SerializeField]
-        [Tooltip("The prefab to use for connections, cannot be null")]
+
+        [SerializeField] [Tooltip("The prefab to use for connections, cannot be null")]
         private GameObject m_ConnectionPrefab;
-        [SerializeField]
-        [Tooltip("The circuit mode")]
+
+        [SerializeField] [Tooltip("The circuit mode")]
         private CircuitMode m_CircuitMode = CircuitMode.Edit;
-        [SerializeField]
-        [Tooltip("The current edit action")]
+
+        [SerializeField] [Tooltip("The current edit action")]
         private EditAction m_EditAction = EditAction.Selection;
-        [SerializeField]
-        [Tooltip("The root of the UI elements")]
+
+        [SerializeField] [Tooltip("The root of the UI elements")]
         private Transform m_UIRoot;
 
-        [Header("Controls")]
-        [SerializeField]
-        private InputActionReference m_TouchPositionAction;
-        //
-        [SerializeField]
-        private InputActionReference m_InteractAction;
-        [SerializeField]
-        private InputActionReference m_SpawnDiodeAction;
-        [SerializeField]
-        private InputActionReference m_SpawnGeneratorAction;
-        [SerializeField]
-        private InputActionReference m_SpawnLedAction;
-        [SerializeField]
-        private InputActionReference m_SpawnPushButtonAction;
-        [SerializeField]
-        private InputActionReference m_SpawnResistorAction;
-        [SerializeField]
-        private float m_ComponentDeleteDelaySeconds = 0.4f;
+        [Header("Controls")] [SerializeField] private InputActionReference m_TouchPositionAction;
 
-        [Header("Component Prefabs")]
-        [SerializeField]
-        [Tooltip("The prefab to use for diodes")]
+        //
+        [SerializeField] private InputActionReference m_InteractAction;
+        [SerializeField] private InputActionReference m_SpawnDiodeAction;
+        [SerializeField] private InputActionReference m_SpawnGeneratorAction;
+        [SerializeField] private InputActionReference m_SpawnLedAction;
+        [SerializeField] private InputActionReference m_SpawnPushButtonAction;
+        [SerializeField] private InputActionReference m_SpawnResistorAction;
+        [SerializeField] private float m_ComponentDeleteDelaySeconds = 0.4f;
+
+        [Header("Component Prefabs")] [SerializeField] [Tooltip("The prefab to use for diodes")]
         private GameObject m_DiodePrefab;
-        [SerializeField]
-        [Tooltip("The prefab to use for generators")]
+
+        [SerializeField] [Tooltip("The prefab to use for generators")]
         private GameObject m_GeneratorPrefab;
-        [SerializeField]
-        [Tooltip("The prefab to use for LEDs")]
+
+        [SerializeField] [Tooltip("The prefab to use for LEDs")]
         private GameObject m_LedPrefab;
-        [SerializeField]
-        [Tooltip("The prefab to use for push buttons")]
+
+        [SerializeField] [Tooltip("The prefab to use for push buttons")]
         private GameObject m_PushButtonPrefab;
-        [SerializeField]
-        [Tooltip("The prefab to use for resistors")]
+
+        [SerializeField] [Tooltip("The prefab to use for resistors")]
         private GameObject m_ResistorPrefab;
 
 
@@ -73,14 +62,14 @@ namespace ECircuit
         [SerializeField]
         [Tooltip("The currently selected connector")]
         private Connector m_SelectedConnector;
-        [SerializeField]
-        [Tooltip("The currently selected component")]
+
+        [SerializeField] [Tooltip("The currently selected component")]
         private BaseComponent m_SelectedComponent;
-        [SerializeField]
-        [Tooltip("The initial color of the selected connector")]
+
+        [SerializeField] [Tooltip("The initial color of the selected connector")]
         private Color m_SelectedConnectorInitialColor;
-        [SerializeField]
-        private ComponentEditor m_ActiveComponentEditor;
+
+        [SerializeField] private ComponentEditor m_ActiveComponentEditor;
 
         private Coroutine m_HoldInteractCoroutine;
 
@@ -88,7 +77,8 @@ namespace ECircuit
 
         public CircuitMode CircuitMode
         {
-            get => m_CircuitMode; set
+            get => m_CircuitMode;
+            set
             {
                 m_CircuitMode = value;
                 if (value == CircuitMode.Simulation)
@@ -98,7 +88,12 @@ namespace ECircuit
                 }
             }
         }
-        public EditAction EditAction { get => m_EditAction; set => m_EditAction = value; }
+
+        public EditAction EditAction
+        {
+            get => m_EditAction;
+            set => m_EditAction = value;
+        }
 
         private void Awake()
         {
@@ -107,6 +102,7 @@ namespace ECircuit
             {
                 m_Camera = Camera.main;
             }
+
             InputAction interactAction = m_InteractAction.action;
             interactAction.started += OnInteractActionStarted;
             interactAction.canceled += OnInteractActionCanceled;
@@ -126,6 +122,7 @@ namespace ECircuit
             {
                 m_Simulator = FindFirstObjectByType<Simulator>();
             }
+
             if (m_UIRoot == null)
             {
                 m_UIRoot = transform;
@@ -144,6 +141,7 @@ namespace ECircuit
             {
                 cleanup();
             }
+
             m_CleanupActions.Clear();
         }
 
@@ -154,6 +152,7 @@ namespace ECircuit
             {
                 return;
             }
+
             Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
             if (m_CircuitMode == CircuitMode.Simulation)
             {
@@ -176,6 +175,7 @@ namespace ECircuit
             {
                 return;
             }
+
             Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
 
             if (m_CircuitMode == CircuitMode.Simulation)
@@ -216,6 +216,7 @@ namespace ECircuit
                 {
                     clickHandler.OnClick.Invoke();
                 }
+
                 return;
             }
 
@@ -234,6 +235,7 @@ namespace ECircuit
                     {
                         OnConnectorSelect(null);
                     }
+
                     break;
                 case EditAction.SpawnDiode:
                     OnSpawnComponentActionPerformed<Diode>(pos, m_DiodePrefab);
@@ -264,10 +266,12 @@ namespace ECircuit
             {
                 yield break;
             }
+
             yield return new WaitForSeconds(m_ComponentDeleteDelaySeconds);
             // Check that the component is still the same after the delay
             Vector2 endPos = m_TouchPositionAction.action.ReadValue<Vector2>();
-            if (m_EditAction == EditAction.Selection && RaycastComponent(endPos, out BaseComponent componentEnd) && componentStart == componentEnd)
+            if (m_EditAction == EditAction.Selection && RaycastComponent(endPos, out BaseComponent componentEnd) &&
+                componentStart == componentEnd)
             {
                 // Hold "interact" to delete the component
                 OnComponentDelete(componentStart);
@@ -290,7 +294,8 @@ namespace ECircuit
             m_Simulator.NeedSimulation = true;
         }
 
-        private void AddSpawnComponentAction<T>(InputActionReference actionRef, GameObject prefab) where T : BaseComponent
+        private void AddSpawnComponentAction<T>(InputActionReference actionRef, GameObject prefab)
+            where T : BaseComponent
         {
             InputAction action = actionRef.action;
             if (action != null)
@@ -300,6 +305,7 @@ namespace ECircuit
                     Vector2 pos = m_TouchPositionAction.action.ReadValue<Vector2>();
                     OnSpawnComponentActionPerformed<T>(pos, prefab);
                 }
+
                 action.performed += onPerform;
                 m_CleanupActions.Add(() => action.performed -= onPerform);
             }
@@ -317,6 +323,7 @@ namespace ECircuit
             {
                 return true;
             }
+
             component = default;
             hit = default;
             return false;
@@ -329,13 +336,15 @@ namespace ECircuit
                 // treat select again as unselect
                 connector = null;
             }
+
             var previousConnector = m_SelectedConnector;
             UnselectConnector();
             if (connector == null || previousConnector == null)
             {
                 SelectConnector(connector);
             }
-            else if (connector.Connection == null || connector.Connection != previousConnector.Connection || !connector.Connection.ConnectedTo.Contains(previousConnector))
+            else if (connector.Connection == null || connector.Connection != previousConnector.Connection ||
+                     !connector.Connection.ConnectedTo.Contains(previousConnector))
             {
                 Connect(previousConnector, connector);
             }
@@ -377,6 +386,7 @@ namespace ECircuit
             {
                 return; // sanity check
             }
+
             var connFrom = from.Connection;
             var connTo = to.Connection;
 
@@ -393,6 +403,7 @@ namespace ECircuit
             {
                 return; // sanity check
             }
+
             var connFrom = from.Connection;
             var connTo = to.Connection;
 
@@ -420,6 +431,7 @@ namespace ECircuit
             {
                 return;
             }
+
             DeselectComponent(m_ActiveComponentEditor);
             m_SelectedComponent = component;
             GameObject editorPrefab = component.ComponentEditorPrefab;
@@ -438,15 +450,25 @@ namespace ECircuit
             {
                 return;
             }
+
             if (editor.Component == m_SelectedComponent)
             {
                 m_SelectedComponent = null;
             }
             if (m_ActiveComponentEditor == editor)
             {
-                m_ActiveComponentEditor = null;
-                Destroy(editor.gameObject);
+                CloseComponentEditor(editor).GetAwaiter();
             }
+        }
+
+        private async Awaitable CloseComponentEditor(ComponentEditor editor)
+        {
+            await m_ActiveComponentEditor.CloseAsync();
+            if (m_ActiveComponentEditor == editor)
+            {
+                m_ActiveComponentEditor = null;
+            }
+            Destroy(editor.gameObject);
         }
     }
 
@@ -466,6 +488,4 @@ namespace ECircuit
         Edit,
         Simulation
     }
-
-
 }
