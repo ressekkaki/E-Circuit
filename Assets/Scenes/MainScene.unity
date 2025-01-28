@@ -1967,6 +1967,7 @@ GameObject:
   - component: {fileID: 1382480622}
   - component: {fileID: 1382480620}
   - component: {fileID: 1382480621}
+  - component: {fileID: 1382480625}
   m_Layer: 5
   m_Name: Edit Mode Panel
   m_TagString: Untagged
@@ -2091,6 +2092,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1382480618}
   m_CullTransparentMesh: 1
+--- !u!114 &1382480625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382480618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f19647018c708ba86f9a7f516a13e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1539001916
 GameObject:
   m_ObjectHideFlags: 0
@@ -3559,6 +3572,11 @@ PrefabInstance:
       propertyPath: m_Simulator
       value: 
       objectReference: {fileID: 1722271391}
+    - target: {fileID: 1381193306436387608, guid: 0860233947ba1e1c4a3effe672dccc28,
+        type: 3}
+      propertyPath: m_EditModePanel
+      value: 
+      objectReference: {fileID: 1382480625}
     - target: {fileID: 1381193306436387608, guid: 0860233947ba1e1c4a3effe672dccc28,
         type: 3}
       propertyPath: m_EditActionsPanel
