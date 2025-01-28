@@ -1,33 +1,35 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using ECircuit.Simulation.Components;
 using System.Linq;
+using ECircuit.Simulation.Components;
+using SpiceSharp.Components;
 using SpiceSharp.Simulations;
 using SpiceSharp.Validation;
-using SpiceSharp.Components;
-using System;
-using JetBrains.Annotations;
+using UnityEngine;
 
 namespace ECircuit.Simulation
 {
     public class Simulator : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject m_CircuitRoot;
+        [SerializeField] private GameObject m_CircuitRoot;
 
-        [SerializeField]
-        [Tooltip("The main generator of the circuit, leave empty to use the first generator found")]
+        [SerializeField] [Tooltip("The main generator of the circuit, leave empty to use the first generator found")]
         private Generator m_MainGenerator;
 
-        public Generator MainGenerator { get => m_MainGenerator; }
+        public Generator MainGenerator
+        {
+            get => m_MainGenerator;
+        }
 
         public GameObject CircuitRoot
         {
             get => m_CircuitRoot;
             set { m_CircuitRoot = value; }
         }
+
         public bool NeedSimulation { get; set; } = true;
         public bool DidSimulate { get; private set; } = false;
+        public bool HasErrors { get; private set; } = false;
 
         public void Awake()
         {
@@ -53,11 +55,14 @@ namespace ECircuit.Simulation
             {
                 return;
             }
+
             NeedSimulation = false;
             DidSimulate = false;
+            HasErrors = false;
             FindMainGenerator();
             var circuit = GatherCircuitComponents();
-            Debug.Log($"Gathered circuit components, {circuit.Components.Count} components and {circuit.Connections.Count} connections");
+            Debug.Log(
+                $"Gathered circuit components, {circuit.Components.Count} components and {circuit.Connections.Count} connections");
             CheckCircuitNames(circuit);
             RenameGroundConnection();
             Simulate(circuit);
@@ -65,7 +70,7 @@ namespace ECircuit.Simulation
 
         private void FindMainGenerator()
         {
-            if (m_CircuitRoot != null && m_MainGenerator == null)
+            if (m_CircuitRoot && !m_MainGenerator)
             {
                 m_MainGenerator = m_CircuitRoot.GetComponentInChildren<Generator>(true);
             }
@@ -82,18 +87,20 @@ namespace ECircuit.Simulation
                 var current = toVisit[^1];
                 toVisit.RemoveAt(toVisit.Count - 1);
 
-                if (current == null || allComponents.Contains(current))
+                if (!current || allComponents.Contains(current))
                 {
                     continue;
                 }
+
                 allComponents.Add(current);
 
                 foreach (var connector in current.Connectors)
                 {
-                    if (connector.Connection == null || allConnections.Contains(connector.Connection))
+                    if (!connector.Connection || allConnections.Contains(connector.Connection))
                     {
                         continue;
                     }
+
                     allConnections.Add(connector.Connection);
                     toVisit.AddRange(connector.Connection.ConnectedTo.Select(c => c.Owner));
                 }
@@ -110,13 +117,16 @@ namespace ECircuit.Simulation
             foreach (var component in circuit.Components)
             {
                 var name = component.ComponentName;
-                bool needNewName = name == null || name.Length == 0;
+                bool needNewName = string.IsNullOrEmpty(name);
 
                 if (!needNewName && componentsByName.ContainsKey(name))
                 {
+#if UNITY_EDITOR
                     Debug.LogError($"Duplicate name for circuit components: {name}");
+#endif
                     needNewName = true;
                 }
+
                 if (needNewName)
                 {
                     name = component.RandomName();
@@ -128,13 +138,16 @@ namespace ECircuit.Simulation
             foreach (var connection in circuit.Connections)
             {
                 var name = connection.ConnectionName;
-                bool needNewName = name == null || name.Length == 0;
+                bool needNewName = string.IsNullOrEmpty(name);
 
                 if (!needNewName && componentsByName.ContainsKey(name))
                 {
+#if UNITY_EDITOR
                     Debug.LogError($"Duplicate name for circuit connection: {name}");
+#endif
                     needNewName = true;
                 }
+
                 if (needNewName)
                 {
                     name = Connection.RandomName();
@@ -147,13 +160,14 @@ namespace ECircuit.Simulation
         private void RenameGroundConnection()
         {
             // // Special case: the ground connection should always be called "0"
-            if (m_MainGenerator == null)
+            if (!m_MainGenerator)
             {
                 return;
             }
+
             var groundConnection = m_MainGenerator.Negative.Connection;
 
-            if (groundConnection != null && groundConnection.ConnectionName != "0")
+            if (groundConnection && groundConnection.ConnectionName != "0")
             {
                 groundConnection.name = "0";
             }
@@ -166,39 +180,52 @@ namespace ECircuit.Simulation
 
         private void Simulate(Circuit circuit)
         {
-            if (m_MainGenerator == null)
+            if (!m_MainGenerator)
             {
+#if UNITY_EDITOR
                 Debug.LogError("Main generator is not set, cannot simulate");
+#endif
+                HasErrors = true;
                 return;
             }
+
             var scCircuit = new SpiceSharp.Circuit(circuit.Components.SelectMany(c => c.BuildEntity()))
             {
                 new DiodeModel("DiodeModel"),
             };
-            var dc = new DC("dc", new List<ISweep> { new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { m_MainGenerator.Voltage }) });
+            var dc = new DC("dc",
+                new List<ISweep>
+                {
+                    new ParameterSweep(m_MainGenerator.ComponentName, new List<double> { m_MainGenerator.Voltage })
+                });
 
             // Export the current (in Amps) of each component
-            Dictionary<BaseComponent, RealPropertyExport> currentExports = circuit.Components.ToDictionary(c => c, c => new RealPropertyExport(dc, c.ComponentName, "i"));
+            Dictionary<BaseComponent, RealPropertyExport> currentExports =
+                circuit.Components.ToDictionary(c => c, c => new RealPropertyExport(dc, c.ComponentName, "i"));
 
             try
             {
-
                 foreach (var _ in dc.Run(scCircuit))
                 {
                     foreach (var connection in circuit.Connections)
                     {
                         connection.CurrentVoltage = dc.GetVoltage(connection.ConnectionName);
                     }
+
                     foreach (var entry in currentExports)
                     {
                         entry.Key.CurrentCurrent = Math.Abs(entry.Value.Value);
                     }
                 }
+
                 DidSimulate = true;
             }
             catch (ValidationFailedException e)
             {
+                HasErrors = true;
+#if UNITY_EDITOR
                 PrintRuleViolations(e);
+#endif
             }
         }
 
@@ -214,7 +241,8 @@ namespace ECircuit.Simulation
                     Debug.LogError($"- {violation}");
                     if (violation is FloatingNodeRuleViolation fv)
                     {
-                        Debug.LogError($"  Cond. Type: {fv.Type}, Floating: ${fv.FloatingVariable}, Fixed: {fv.FixedVariable}");
+                        Debug.LogError(
+                            $"  Cond. Type: {fv.Type}, Floating: ${fv.FloatingVariable}, Fixed: {fv.FixedVariable}");
                     }
                     else if (violation is VoltageLoopRuleViolation lv)
                     {
@@ -226,7 +254,6 @@ namespace ECircuit.Simulation
                     }
                 }
             }
-
         }
     }
 
@@ -241,5 +268,4 @@ namespace ECircuit.Simulation
             Connections = connections;
         }
     }
-
 }
