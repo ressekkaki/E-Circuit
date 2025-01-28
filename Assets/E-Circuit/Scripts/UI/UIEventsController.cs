@@ -13,6 +13,8 @@ namespace ECircuit.UI
         private Simulator m_Simulator;
         [SerializeField]
         private EditModePanel m_EditModePanel;
+        [SerializeField]
+        private GameObject m_CircuitErrorPanel;
 
         public CircuitMode CircuitMode
         {
@@ -51,6 +53,10 @@ namespace ECircuit.UI
                 m_EditModePanel.gameObject.SetActive(true);
                 m_EditModePanel.Open();
             }
+            if (m_CircuitErrorPanel)
+            {
+                m_CircuitErrorPanel.SetActive(false);
+            }
         }
 
         private void SwitchToSimulationMode()
@@ -60,8 +66,21 @@ namespace ECircuit.UI
             {
                 m_EditModePanel.Close();
             }
+            if (m_CircuitErrorPanel)
+            {
+                m_CircuitErrorPanel.SetActive(m_Simulator.HasErrors);
+            }
             m_Simulator.NeedSimulation = true;
             m_Simulator.enabled = true;
+        }
+
+        public void Update()
+        {
+            var shouldDisplayError = m_Simulator.HasErrors && CircuitMode == CircuitMode.Simulation;
+            if (m_CircuitErrorPanel && m_CircuitErrorPanel.activeSelf != shouldDisplayError)
+            {
+                m_CircuitErrorPanel.SetActive(shouldDisplayError);
+            }
         }
 
         #region UI Event Callbacks
