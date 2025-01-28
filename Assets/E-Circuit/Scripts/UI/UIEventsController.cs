@@ -12,7 +12,7 @@ namespace ECircuit.UI
         [SerializeField]
         private Simulator m_Simulator;
         [SerializeField]
-        private GameObject m_EditActionsPanel;
+        private EditModePanel m_EditModePanel;
 
         public CircuitMode CircuitMode
         {
@@ -46,18 +46,19 @@ namespace ECircuit.UI
             m_Simulator.NeedSimulation = false;
             m_Simulator.enabled = false;
             m_CircuitEditor.CircuitMode = CircuitMode.Edit;
-            if (m_EditActionsPanel != null)
+            if (m_EditModePanel != null)
             {
-                m_EditActionsPanel.SetActive(true);
+                m_EditModePanel.gameObject.SetActive(true);
+                m_EditModePanel.Open();
             }
         }
 
         private void SwitchToSimulationMode()
         {
             m_CircuitEditor.CircuitMode = CircuitMode.Simulation;
-            if (m_EditActionsPanel != null)
+            if (m_EditModePanel != null)
             {
-                m_EditActionsPanel.SetActive(false);
+                m_EditModePanel.Close();
             }
             m_Simulator.NeedSimulation = true;
             m_Simulator.enabled = true;
