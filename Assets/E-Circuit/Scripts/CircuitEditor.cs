@@ -9,7 +9,7 @@ using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
+using Object = UnityEngine.Object;
 
 namespace ECircuit
 {
@@ -280,20 +280,48 @@ namespace ECircuit
             }
         }
 
-        public void OnTrackableComponentChanged(ARTrackablesChangedEventArgs<ARTrackable> args)
+        public void OnTrackableComponentChanged(ARTrackablesChangedEventArgs<ARTrackedImage> args)
         {
             foreach (var added in args.added)
             {
-                Debug.Log($"Added {added.name}");
+                var cName = added.referenceImage.name;
+                Debug.Log($"Added {cName}");
+                if (cName.StartsWith("component-battery"))
+                {
+                    SpawnARTrackedComponent<Generator>(m_GeneratorPrefab, added.gameObject);
+                }
+                else if (cName.StartsWith("component-button"))
+                {
+                    SpawnARTrackedComponent<PushButton>(m_PushButtonPrefab, added.gameObject);
+                }
+                else if (cName.StartsWith("component-diode"))
+                {
+                    SpawnARTrackedComponent<Diode>(m_DiodePrefab, added.gameObject);
+                }
+                else if (cName.StartsWith("component-led"))
+                {
+                    SpawnARTrackedComponent<Led>(m_LedPrefab, added.gameObject);
+                }
+                else if (cName.StartsWith("component-resistance"))
+                {
+                    SpawnARTrackedComponent<Resistor>(m_ResistorPrefab, added.gameObject);
+                }
             }
-            foreach (var updated in args.updated)
-            {
-                Debug.Log($"Updated {updated.name}");
-            }
+
             foreach (var pair in args.removed)
             {
-                Debug.Log($"Updated {pair.Value.name} ({pair.Key}");
+                Debug.Log($"Updated {pair.Value.referenceImage.name} ({pair.Key}");
             }
+        }
+
+        private void SpawnARTrackedComponent<T>(GameObject prefab, GameObject target) where T : BaseComponent
+        {
+            var obj = Instantiate(prefab, target.transform);
+            BaseComponent component = obj.GetComponent<T>();
+            component.name = component.RandomName();
+            component.ComponentName = component.name;
+            m_Simulator.CircuitRoot = target.transform.parent.gameObject;
+            m_Simulator.NeedSimulation = true;
         }
 
         private void OnSpawnComponentActionPerformed<T>(Vector2 pos, GameObject prefab) where T : BaseComponent
@@ -473,6 +501,7 @@ namespace ECircuit
             {
                 m_SelectedComponent = null;
             }
+
             if (m_ActiveComponentEditor == editor)
             {
                 CloseComponentEditor(editor).GetAwaiter();
@@ -486,6 +515,7 @@ namespace ECircuit
             {
                 m_ActiveComponentEditor = null;
             }
+
             Destroy(editor.gameObject);
         }
     }
