@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
+  m_Name: ComponentImages
+  m_EditorClassIdentifier: 
+  m_GuidLow: 5474178344199307031
+  m_GuidHigh: 12371167450510714296
+  m_DataStore:
+    m_Storage: []
+  m_Images:
+  - m_SerializedGuid:
+      m_GuidLow: 4736651156168854996
+      m_GuidHigh: 388896702425450369
+    m_SerializedTextureGuid:
+      m_GuidLow: 2056989967953266064
+      m_GuidHigh: 630643827126457466
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-battery-1
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5432478491750191368
+      m_GuidHigh: 13248836537281811878
+    m_SerializedTextureGuid:
+      m_GuidLow: 1504703110143387452
+      m_GuidHigh: 17076005321839788568
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-button-1
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4614269385044312757
+      m_GuidHigh: 1437840288333794966
+    m_SerializedTextureGuid:
+      m_GuidLow: 2998378809590440189
+      m_GuidHigh: 4509897810718941464
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-button-2
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4697117464819062489
+      m_GuidHigh: 12688424512862799539
+    m_SerializedTextureGuid:
+      m_GuidLow: 3775447349125426640
+      m_GuidHigh: 5442125783189013736
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-diode-1
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5084877774071049307
+      m_GuidHigh: 1570783935475514022
+    m_SerializedTextureGuid:
+      m_GuidLow: 11124516482214430950
+      m_GuidHigh: 8309353935862992970
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-led-1
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5211067174018949326
+      m_GuidHigh: 7740290638003950759
+    m_SerializedTextureGuid:
+      m_GuidLow: 12855448667973413089
+      m_GuidHigh: 2460771511150677562
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-led-2
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4785402759879043761
+      m_GuidHigh: 8273399591481988747
+    m_SerializedTextureGuid:
+      m_GuidLow: 3829875045212139220
+      m_GuidHigh: 18032754613595635178
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-led-3
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5469770281814074024
+      m_GuidHigh: 7140772654914627500
+    m_SerializedTextureGuid:
+      m_GuidLow: 17074333823311683115
+      m_GuidHigh: 15339358041679073339
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-resistance-1
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5544083802505795432
+      m_GuidHigh: 10013545093864530327
+    m_SerializedTextureGuid:
+      m_GuidLow: 2075314471255896591
+      m_GuidHigh: 14794255538334911704
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-resistance-2
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5102681520492173794
+      m_GuidHigh: 4156578303545056948
+    m_SerializedTextureGuid:
+      m_GuidLow: 5111357011627647668
+      m_GuidHigh: 11187228566732685401
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-resistance-3
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5754037466145247780
+      m_GuidHigh: 14004906573876450234
+    m_SerializedTextureGuid:
+      m_GuidLow: 1988237251689529354
+      m_GuidHigh: 4819370446007382875
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-resistance-4
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4781892971068357032
+      m_GuidHigh: 17764945301444542862
+    m_SerializedTextureGuid:
+      m_GuidLow: 2095720190805930106
+      m_GuidHigh: 9324385836485370171
+    m_Size: {x: 0.148, y: 0.20397437}
+    m_SpecifySize: 1
+    m_Name: component-switch-1
+    m_Texture: {fileID: 0}
