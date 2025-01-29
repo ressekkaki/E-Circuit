@@ -310,7 +310,13 @@ namespace ECircuit
 
             foreach (var pair in args.removed)
             {
-                Debug.Log($"Updated {pair.Value.referenceImage.name} ({pair.Key}");
+                Debug.Log($"Deleted {pair.Value.referenceImage.name}");
+                var component = pair.Value.gameObject.GetComponentInChildren<BaseComponent>();
+                if (component)
+                {
+                    OnComponentDelete(component);
+                }
+                
             }
         }
 
