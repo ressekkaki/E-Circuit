@@ -148,7 +148,7 @@ namespace ECircuit
         private void OnInteractActionStarted(InputAction.CallbackContext context)
         {
             // Do not interact with UI elements
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.currentSelectedGameObject)
             {
                 return;
             }
@@ -171,7 +171,7 @@ namespace ECircuit
         private void OnInteractActionCanceled(InputAction.CallbackContext context)
         {
             // Do not interact with UI elements
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.currentSelectedGameObject)
             {
                 return;
             }
@@ -203,7 +203,7 @@ namespace ECircuit
         private void OnInteractActionPerformed(InputAction.CallbackContext context)
         {
             // Do not interact with UI elements
-            if (!context.performed || EventSystem.current.IsPointerOverGameObject())
+            if (!context.performed || EventSystem.current.currentSelectedGameObject)
             {
                 return;
             }
