@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace ECircuit
 {
@@ -275,6 +277,22 @@ namespace ECircuit
             {
                 // Hold "interact" to delete the component
                 OnComponentDelete(componentStart);
+            }
+        }
+
+        public void OnTrackableComponentChanged(ARTrackablesChangedEventArgs<ARTrackable> args)
+        {
+            foreach (var added in args.added)
+            {
+                Debug.Log($"Added {added.name}");
+            }
+            foreach (var updated in args.updated)
+            {
+                Debug.Log($"Updated {updated.name}");
+            }
+            foreach (var pair in args.removed)
+            {
+                Debug.Log($"Updated {pair.Value.name} ({pair.Key}");
             }
         }
 
