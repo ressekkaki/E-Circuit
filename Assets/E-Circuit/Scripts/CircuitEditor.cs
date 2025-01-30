@@ -324,6 +324,7 @@ namespace ECircuit
         {
             var obj = Instantiate(prefab, target.transform);
             BaseComponent component = obj.GetComponent<T>();
+            obj.transform.localPosition = Vector3.zero;
             component.name = component.RandomName();
             component.ComponentName = component.name;
             m_Simulator.CircuitRoot = target.transform.parent.gameObject;
